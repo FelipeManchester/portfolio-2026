@@ -11,7 +11,7 @@ interface Props {
 	locale?: Locale;
 }
 
-const { locale = 'en' } = Astro.props;
+const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
 
 // Split on the server: the browser receives finished markup, so the <h1> is
@@ -223,13 +223,18 @@ const lines = t.nameLines.map((line, index) => {
 		}
 	}
 
+	/* Every inset except the animated one is negative, so the clip never touches
+	   ink: top/bottom clear ascenders and descenders, and the right clears the
+	   final full stop. `letter-spacing: -0.045em` is applied after the last
+	   character too, which pulls the fit-content edge back into the period's
+	   right sidebearing — without the overshoot the dot renders with a flat
+	   shaved edge. */
 	@keyframes plot-reveal {
 		from {
-			/* Negative top/bottom so ascenders and descenders are never cropped. */
 			clip-path: inset(-0.15em 100% -0.28em 0);
 		}
 		to {
-			clip-path: inset(-0.15em 0 -0.28em 0);
+			clip-path: inset(-0.15em -0.12em -0.28em 0);
 		}
 	}
 

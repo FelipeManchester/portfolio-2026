@@ -1,33 +1,38 @@
 ---
 import LocalTime from './LocalTime.astro';
-import { copy, availableForWork, location, type Locale } from '../../content/site';
+import LocaleSwitch from './LocaleSwitch.astro';
+import { copy, availableForWork, type Locale } from '../../content/site';
 
 interface Props {
 	locale?: Locale;
 }
 
-const { locale = 'en' } = Astro.props;
+const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
 ---
 
 {/*
-  The drafting frame. Three annotations, not four — the empty bottom-right is
-  deliberate; a technical sheet is not symmetrical, and inventing a fourth
-  label would be filler.
+  The drafting frame: local time top-left, language switch top-right,
+  availability bottom-left. The empty bottom-right is deliberate — a technical
+  sheet is not symmetrical, and a fourth label would be filler.
+
+  Not aria-hidden as a whole: it holds a real navigation landmark and two pieces
+  of genuine information. Only the hairlines and the status dot are decorative.
 */}
-<div class="frame" aria-hidden="true">
+<div class="frame">
 	<div class="frame__row frame__row--top">
-		<span class="frame__label frame__label--coords">{location.coordinates}</span>
-		<span class="frame__rule"></span>
-		<span class="frame__label"><LocalTime /></span>
+		<span class="frame__label"><LocalTime locale={locale} /></span>
+		<span class="frame__rule" aria-hidden="true"></span>
+		<LocaleSwitch locale={locale} />
 	</div>
 
 	<div class="frame__row frame__row--bottom">
-		<span class="frame__label frame__status">
-			<span class="frame__dot" data-on={availableForWork ? '' : undefined}></span>
+		<p class="frame__label frame__status">
+			<span class="frame__dot" aria-hidden="true" data-on={availableForWork ? '' : undefined}
+			></span>
 			{availableForWork ? t.available : t.unavailable}
-		</span>
-		<span class="frame__rule"></span>
+		</p>
+		<span class="frame__rule" aria-hidden="true"></span>
 	</div>
 </div>
 
@@ -39,6 +44,8 @@ const t = copy[locale];
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+		/* Click-through so the frame never steals events from the hero; the
+		   language links opt back in themselves. */
 		pointer-events: none;
 	}
 
@@ -49,6 +56,7 @@ const t = copy[locale];
 	}
 
 	.frame__label {
+		margin: 0;
 		color: var(--fg-muted);
 		font-family: var(--font-mono);
 		font-size: var(--step-mono);
@@ -65,11 +73,11 @@ const t = copy[locale];
 		animation: rule-draw 1200ms var(--ease-out-quart) 200ms both;
 	}
 
-	.frame__row--top .frame__label {
+	.frame__row--top > :not(.frame__rule) {
 		animation: annotation-in 700ms var(--ease-out-expo) 900ms both;
 	}
 
-	.frame__row--bottom .frame__label {
+	.frame__row--bottom > :not(.frame__rule) {
 		animation: annotation-in 700ms var(--ease-out-expo) 1050ms both;
 	}
 
@@ -120,14 +128,6 @@ const t = copy[locale];
 		to {
 			clip-path: inset(0 0 -0.2em 0);
 			opacity: 1;
-		}
-	}
-
-	/* The coordinates are the first thing to go when width gets tight — the
-	   clock and the availability status both carry more weight. */
-	@media (max-width: 560px) {
-		.frame__label--coords {
-			display: none;
 		}
 	}
 </style>

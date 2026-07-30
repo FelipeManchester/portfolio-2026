@@ -1,20 +1,25 @@
 ---
 import { copy, type Locale } from '../../content/site';
+import { localePath } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
-const { locale = 'en' } = Astro.props;
+const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
+
+// Prefixed like the nav, so these never jump the visitor to another language.
+const projectsHref = localePath('/projects', locale);
+const contactHref = localePath('/contact', locale);
 ---
 
 <div class="cta reveal">
-	<a class="cta__button cta__button--primary" href="/projects" data-magnetic>
+	<a class="cta__button cta__button--primary" href={projectsHref} data-magnetic>
 		<span class="cta__label">{t.ctaPrimary}</span>
 	</a>
 
-	<a class="cta__button cta__button--secondary" href="/contact" data-magnetic>
+	<a class="cta__button cta__button--secondary" href={contactHref} data-magnetic>
 		<span class="cta__label">{t.ctaSecondary}</span>
 		<svg class="cta__arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
 			<path

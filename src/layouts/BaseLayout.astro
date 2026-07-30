@@ -1,6 +1,7 @@
 ---
 import { Font } from 'astro:assets';
-import { copy, type Locale } from '../content/site';
+import { copy, locales, type Locale } from '../content/site';
+import { localePath } from '../lib/i18n';
 import '../styles/global.css';
 
 interface Props {
@@ -11,6 +12,15 @@ interface Props {
 
 const { title, description, locale = 'en' } = Astro.props;
 const t = copy[locale];
+
+// Pairs the two language versions of whatever page this is. Absolute URLs are
+// preferred for hreflang, but only once `site` is set in astro.config.mjs —
+// without it Astro.site is undefined and absolutising here would bake the
+// build machine's localhost address into production HTML.
+const alternates = locales.map((code) => {
+	const path = localePath(Astro.url.pathname, code);
+	return { code, href: Astro.site ? new URL(path, Astro.site).href : path };
+});
 ---
 
 <html lang={locale}>
@@ -23,6 +33,9 @@ const t = copy[locale];
 
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+
+		{alternates.map((alt) => <link rel="alternate" hreflang={alt.code} href={alt.href} />)}
+		<link rel="alternate" hreflang="x-default" href={alternates[0]?.href} />
 
 		<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 		<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />

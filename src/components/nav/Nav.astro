@@ -1,14 +1,22 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
 import { copy, type Locale } from '../../content/site';
+import { localePath } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
-const { locale = 'en' } = Astro.props;
+const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
 const current = Astro.url.pathname;
+
+// Hrefs are authored locale-neutral in site.ts and prefixed here, so a
+// Portuguese visitor never gets dropped onto an English route.
+const items = t.nav.map((item) => ({
+	...item,
+	href: localePath(item.href, locale),
+}));
 ---
 
 {/* Watched by an IntersectionObserver to drive the scrolled state. */}
@@ -18,7 +26,7 @@ const current = Astro.url.pathname;
 	<nav class="nav__pill" aria-label={t.navLabel}>
 		<ul class="nav__list" id="nav-menu" data-menu-panel>
 			{
-				t.nav.map((item) => (
+				items.map((item) => (
 					<li>
 						<a
 							href={item.href}

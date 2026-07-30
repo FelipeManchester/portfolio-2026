@@ -1,0 +1,66 @@
+---
+import { copy, locales, type Locale } from '../../content/site';
+import { localePath } from '../../lib/i18n';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = copy[locale];
+const pathname = Astro.url.pathname;
+---
+
+<nav class="locale" aria-label={t.localeLabel}>
+	{
+		locales.map((code, index) => (
+			<>
+				{index > 0 && <span class="locale__divider" aria-hidden="true" />}
+				<a
+					class="locale__link"
+					href={localePath(pathname, code)}
+					hreflang={code}
+					lang={code}
+					aria-current={code === locale ? 'true' : undefined}
+				>
+					{code.toUpperCase()}
+				</a>
+			</>
+		))
+	}
+</nav>
+
+<style>
+	.locale {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		/* The frame itself is click-through; these links must not be. */
+		pointer-events: auto;
+	}
+
+	.locale__link {
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-decoration: none;
+		transition: color 180ms linear;
+	}
+
+	.locale__link:hover {
+		color: var(--fg);
+	}
+
+	/* The active language is stated by aria-current for assistive tech and by
+	   full contrast for everyone else. */
+	.locale__link[aria-current='true'] {
+		color: var(--fg);
+	}
+
+	.locale__divider {
+		width: 1px;
+		height: 0.6875rem;
+		background: var(--line);
+	}
+</style>

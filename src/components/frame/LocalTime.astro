@@ -1,5 +1,12 @@
 ---
-import { location } from '../../content/site';
+import { copy, location, type Locale } from '../../content/site';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'pt' } = Astro.props;
+const t = copy[locale];
 ---
 
 {/*
@@ -8,6 +15,7 @@ import { location } from '../../content/site';
   monospace face means filling it in causes no reflow.
 */}
 <span class="clock" data-clock data-timezone={location.timeZone}>
+	<span class="sr-only">{t.localTimeLabel}</span>
 	<span data-clock-value>--:--</span> BRT
 </span>
 

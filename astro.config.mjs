@@ -7,6 +7,13 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 	},
+	i18n: {
+		defaultLocale: 'pt',
+		locales: ['pt', 'en'],
+		// Portuguese is the primary version and stays at the root; English lives
+		// under /en.
+		routing: { prefixDefaultLocale: false },
+	},
 	fonts: [
 		{
 			provider: fontProviders.fontshare(),
