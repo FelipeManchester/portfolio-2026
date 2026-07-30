@@ -1,0 +1,73 @@
+---
+import { copy, type Locale } from '../../content/site';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const t = copy[locale];
+---
+
+<section class="about" aria-labelledby="about-label">
+	<h2 class="about__label" id="about-label">{t.aboutLabel}</h2>
+	<span class="about__rule" aria-hidden="true"></span>
+	<p class="about__body">{t.aboutBody}</p>
+</section>
+
+<style>
+	.about {
+		max-width: 40ch;
+	}
+
+	.about__label {
+		margin: 0;
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		font-weight: 400;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		animation: about-in 700ms var(--ease-out-expo) 1150ms both;
+	}
+
+	/* Same hairline vocabulary as the frame annotations. */
+	.about__rule {
+		display: block;
+		height: 1px;
+		margin-block: 0.75rem 1rem;
+		background: var(--line);
+		transform-origin: left center;
+		animation: rule-draw 900ms var(--ease-out-quart) 1200ms both;
+	}
+
+	.about__body {
+		margin: 0;
+		color: var(--fg-muted);
+		font-size: 0.9375rem;
+		line-height: 1.65;
+		letter-spacing: -0.006em;
+		text-wrap: pretty;
+		animation: about-in 800ms var(--ease-out-expo) 1300ms both;
+	}
+
+	@keyframes about-in {
+		from {
+			clip-path: inset(0 0 100% 0);
+			opacity: 0;
+		}
+		to {
+			clip-path: inset(0 0 -0.25em 0);
+			opacity: 1;
+		}
+	}
+
+	@keyframes rule-draw {
+		from {
+			transform: scaleX(0);
+		}
+		to {
+			transform: scaleX(1);
+		}
+	}
+</style>

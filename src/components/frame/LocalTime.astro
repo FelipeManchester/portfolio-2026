@@ -1,0 +1,43 @@
+---
+import { location } from '../../content/site';
+---
+
+{/*
+  Rendered as a placeholder rather than a build-time value: this is a static
+  build, so a baked timestamp would be stale the moment it deployed. The
+  monospace face means filling it in causes no reflow.
+*/}
+<span class="clock" data-clock data-timezone={location.timeZone}>
+	<span data-clock-value>--:--</span> BRT
+</span>
+
+<style>
+	.clock {
+		font-variant-numeric: tabular-nums;
+	}
+</style>
+
+<script>
+	const clock = document.querySelector<HTMLElement>('[data-clock]');
+	const value = clock?.querySelector<HTMLElement>('[data-clock-value]');
+
+	if (clock && value) {
+		const formatter = new Intl.DateTimeFormat('en-GB', {
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false,
+			timeZone: clock.dataset.timezone,
+		});
+
+		const tick = () => {
+			value.textContent = formatter.format(new Date());
+		};
+
+		tick();
+		// Aligned to the next minute boundary so it never sits a beat behind.
+		window.setTimeout(() => {
+			tick();
+			window.setInterval(tick, 60_000);
+		}, 60_000 - (Date.now() % 60_000));
+	}
+</script>

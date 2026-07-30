@@ -1,0 +1,73 @@
+---
+import { copy, type Locale } from '../../content/site';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const t = copy[locale];
+---
+
+<div class="tagline reveal">
+	{/* One stable sentence for assistive tech; the rotator is decorative. */}
+	<p class="sr-only">{t.taglineStatic}</p>
+
+	<div class="tagline__window" data-tagline aria-hidden="true">
+		{
+			t.taglines.map((line) => (
+				<span class="tagline__line" data-tagline-line>
+					{line}
+				</span>
+			))
+		}
+	</div>
+</div>
+
+<style>
+	.tagline {
+		animation: tagline-in 900ms var(--ease-out-expo) 700ms both;
+	}
+
+	/* The sentences share one grid cell rather than being absolutely
+	   positioned: they still overlap, but they all contribute to the intrinsic
+	   size, so the window is as wide as the longest line. Absolute children
+	   would leave it 0px wide and `overflow: hidden` would clip every word. */
+	.tagline__window {
+		display: grid;
+		overflow: hidden;
+		color: var(--fg-muted);
+		font-size: var(--step-tagline);
+		line-height: 1.6;
+		letter-spacing: -0.011em;
+	}
+
+	.tagline__line {
+		grid-area: 1 / 1;
+		white-space: nowrap;
+		/* Only the first sentence is visible without JavaScript. The script
+		   takes over with fill:forwards animations on the same property. */
+		transform: translateY(100%);
+		opacity: 0;
+	}
+
+	.tagline__line:first-child {
+		transform: translateY(0);
+		opacity: 1;
+	}
+
+	@keyframes tagline-in {
+		from {
+			clip-path: inset(0 0 100% 0);
+			opacity: 0;
+		}
+		to {
+			clip-path: inset(0 0 -0.35em 0);
+			opacity: 1;
+		}
+	}
+
+	/* Kept on one line at every width so the vertical slide always masks
+	   exactly one line height; the clamped size keeps the longest sentence
+	   inside a 320px viewport. */
+</style>

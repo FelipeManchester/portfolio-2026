@@ -1,0 +1,65 @@
+---
+/**
+ * Bottom-centre scroll cue: a hairline with a travelling accent segment.
+ * Decorative — the frame's own rules already carry the layout.
+ */
+---
+
+<div class="scroll" aria-hidden="true">
+	<span class="scroll__track"><span class="scroll__head"></span></span>
+</div>
+
+<style>
+	.scroll {
+		display: grid;
+		place-items: center;
+		animation: scroll-in 800ms var(--ease-out-expo) 1400ms both;
+	}
+
+	.scroll__track {
+		position: relative;
+		display: block;
+		width: 1px;
+		height: 34px;
+		overflow: hidden;
+		background: var(--line);
+	}
+
+	.scroll__head {
+		position: absolute;
+		inset-inline: 0;
+		top: 0;
+		display: block;
+		height: 12px;
+		background: var(--accent);
+		animation: scroll-travel 2200ms var(--ease-out-quart) infinite;
+	}
+
+	@keyframes scroll-travel {
+		0% {
+			transform: translateY(-12px);
+			opacity: 0;
+		}
+		35% {
+			opacity: 1;
+		}
+		75% {
+			opacity: 1;
+		}
+		100% {
+			transform: translateY(34px);
+			opacity: 0;
+		}
+	}
+
+	@keyframes scroll-in {
+		from {
+			opacity: 0;
+			scale: 1 0;
+		}
+		to {
+			opacity: 1;
+			scale: 1 1;
+		}
+	}
+</style>

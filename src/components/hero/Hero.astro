@@ -1,0 +1,264 @@
+---
+import RotatingTagline from './RotatingTagline.astro';
+import About from './About.astro';
+import CtaGroup from './CtaGroup.astro';
+import StackList from './StackList.astro';
+import ScrollIndicator from './ScrollIndicator.astro';
+import { splitChars } from '../../lib/split';
+import { copy, type Locale } from '../../content/site';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const t = copy[locale];
+
+// Split on the server: the browser receives finished markup, so the <h1> is
+// paintable as the LCP element with no JavaScript involved.
+const lines = t.nameLines.map((line, index) => {
+	const chars = splitChars(line);
+	// The accent full stop closes the last line. It is decorative punctuation,
+	// not part of the name — the <h1>'s aria-label already carries the name, so
+	// it is never announced.
+	const stop = index === t.nameLines.length - 1;
+	return {
+		chars,
+		stop,
+		delay: 150 + index * 130,
+		// Counts the stop so the per-character stagger still maps onto the full
+		// width the wipe has to travel.
+		total: chars.length + (stop ? 1 : 0),
+	};
+});
+---
+
+<section class="hero" id="main">
+	<div class="hero__block">
+		<h1 class="name" aria-label={t.nameAccessible}>
+			{
+				lines.map(({ chars, stop, delay, total }) => (
+					<span class="name__line" style={`--delay:${delay}ms; --n:${total}`}>
+						<span class="name__ink">
+							{chars.map((char) => (
+								<span class="name__char" style={`--i:${char.index}`}>
+									{char.isSpace ? ' ' : char.value}
+								</span>
+							))}
+							{stop && (
+								<span class="name__stop" style={`--i:${chars.length}`}>
+									.
+								</span>
+							)}
+						</span>
+					</span>
+				))
+			}
+		</h1>
+
+		<div class="hero__row">
+			<div class="hero__lead">
+				<RotatingTagline locale={locale} />
+				<CtaGroup locale={locale} />
+			</div>
+
+			<About locale={locale} />
+		</div>
+	</div>
+
+	<div class="hero__foot">
+		<StackList locale={locale} />
+		<ScrollIndicator />
+	</div>
+</section>
+
+<style>
+	.hero {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		grid-template-rows: 1fr auto;
+		min-height: 100svh;
+		padding: calc(var(--frame-inset) + 4.5rem) var(--frame-inset)
+			calc(var(--frame-inset) + 2.25rem);
+		/* Makes 100cqw equal the hero's content width, which is what the name
+		   is sized against below. */
+		container-type: inline-size;
+	}
+
+	/* Flush-left lines inside a block that is itself centred. FELIPE and
+	   MANCHESTER differ far too much in width for centred lines to stack
+	   architecturally. */
+	.hero__block {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: center;
+		width: fit-content;
+		max-width: 100%;
+		margin-inline: auto;
+		gap: clamp(1.5rem, 3.5vh, 2.75rem);
+	}
+
+	/* Tagline and buttons on the left, the about block pushed to the right
+	   edge of the name above it. Bottom-aligned so both columns settle onto the
+	   same visual baseline regardless of how long the about copy runs. */
+	.hero__row {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: clamp(2rem, 6vw, 6rem);
+		width: 100%;
+	}
+
+	.hero__lead {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: clamp(1.5rem, 3.5vh, 2.75rem);
+	}
+
+	.hero__foot {
+		display: grid;
+		justify-items: center;
+		gap: 1.5rem;
+		align-content: end;
+		padding-top: 2.5rem;
+	}
+
+	/* --- The name ------------------------------------------------------- */
+
+	/* "MANCHESTER." measures about 6.93x its font-size in General Sans 600 at
+	   -0.045em, so dividing the container by 9.3 sets the name to roughly 75% of
+	   the measure — solved against the container rather than guessed with vw, so
+	   the proportion holds at every viewport. The svh term takes over on short,
+	   wide windows, where width alone would let two lines overflow the fold. */
+	.name {
+		--draw: 820ms;
+		/* How far the rule stays ahead of the ink, in time. */
+		--wake: 100ms;
+		/* Near-constant speed with a soft landing. A front-loaded ease would
+		   fling the rule most of the way across before the first letter
+		   appeared, which reads as two events rather than one wake. */
+		--ease-plot: cubic-bezier(0.4, 0.42, 0.3, 1);
+		margin: 0;
+		font-size: min(calc(100cqw / 9.3), 16svh);
+		font-weight: 600;
+		line-height: 0.82;
+		letter-spacing: -0.045em;
+		text-transform: uppercase;
+	}
+
+	/* Shrink-wrapped to the word, not the container: the hairline then spans
+	   exactly the line it is drawing, and the clip-path's progress maps to the
+	   letterforms rather than to empty measure beyond them. FELIPE gets a short
+	   rule and MANCHESTER a long one, which is the point. */
+	.name__line {
+		position: relative;
+		display: block;
+		width: fit-content;
+		white-space: nowrap;
+	}
+
+	/* The plotter hairline: draws left to right, holds, then retracts right.
+	   Its draw phase is exactly --draw long and uses exactly the same easing as
+	   the ink below, so the 120ms offset between them stays constant for the
+	   whole sweep. Matching only the delays but not the durations would let the
+	   rule finish while the letters were still half-drawn. */
+	.name__line::after {
+		content: '';
+		position: absolute;
+		inset-inline: 0;
+		bottom: -0.055em;
+		height: 1px;
+		background: var(--accent);
+		/* --draw 820ms draw, 160ms hold, 520ms retract = 1500ms total. */
+		animation: plot-line 1500ms linear both;
+		animation-delay: var(--delay);
+	}
+
+	/* The letterforms are uncovered in the hairline's wake, 120ms behind it. */
+	.name__ink {
+		display: block;
+		animation: plot-reveal var(--draw) var(--ease-plot) both;
+		animation-delay: calc(var(--delay) + var(--wake));
+	}
+
+	.name__char,
+	.name__stop {
+		display: inline-block;
+		/* Each character settles as the wipe passes it, so the delay is its own
+		   fraction of the sweep rather than a fixed per-character step. */
+		animation: char-settle 560ms var(--ease-out-expo) both;
+		animation-delay: calc(var(--delay) + var(--wake) + (var(--i) / var(--n)) * var(--draw));
+	}
+
+	/* The one piece of colour in the composition. It lands last, as the rule
+	   reaches the end of the final line. */
+	.name__stop {
+		color: var(--accent);
+	}
+
+	/* Per-segment easing: quart-out on the way out, linear through the hold,
+	   quart-in on the retract so it accelerates away. */
+	@keyframes plot-line {
+		0% {
+			transform: scaleX(0);
+			transform-origin: left center;
+			animation-timing-function: cubic-bezier(0.4, 0.42, 0.3, 1);
+		}
+		54.7% {
+			transform: scaleX(1);
+			transform-origin: left center;
+			animation-timing-function: linear;
+		}
+		65.3% {
+			transform: scaleX(1);
+			transform-origin: right center;
+			animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+		}
+		100% {
+			transform: scaleX(0);
+			transform-origin: right center;
+		}
+	}
+
+	@keyframes plot-reveal {
+		from {
+			/* Negative top/bottom so ascenders and descenders are never cropped. */
+			clip-path: inset(-0.15em 100% -0.28em 0);
+		}
+		to {
+			clip-path: inset(-0.15em 0 -0.28em 0);
+		}
+	}
+
+	@keyframes char-settle {
+		from {
+			transform: translate3d(0, 0.09em, 0);
+		}
+		to {
+			transform: translate3d(0, 0, 0);
+		}
+	}
+
+	@media (max-width: 900px) {
+		/* Side by side stops working once the about copy is narrower than its
+		   own measure; stack it under the buttons instead. */
+		.hero__row {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: clamp(1.75rem, 4vh, 2.75rem);
+		}
+	}
+
+	@media (max-width: 720px) {
+		.hero {
+			padding-top: calc(var(--frame-inset) + 3.5rem);
+		}
+
+		.hero__foot {
+			gap: 1.125rem;
+		}
+	}
+</style>

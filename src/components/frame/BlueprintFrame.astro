@@ -1,0 +1,133 @@
+---
+import LocalTime from './LocalTime.astro';
+import { copy, availableForWork, location, type Locale } from '../../content/site';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const t = copy[locale];
+---
+
+{/*
+  The drafting frame. Three annotations, not four — the empty bottom-right is
+  deliberate; a technical sheet is not symmetrical, and inventing a fourth
+  label would be filler.
+*/}
+<div class="frame" aria-hidden="true">
+	<div class="frame__row frame__row--top">
+		<span class="frame__label frame__label--coords">{location.coordinates}</span>
+		<span class="frame__rule"></span>
+		<span class="frame__label"><LocalTime /></span>
+	</div>
+
+	<div class="frame__row frame__row--bottom">
+		<span class="frame__label frame__status">
+			<span class="frame__dot" data-on={availableForWork ? '' : undefined}></span>
+			{availableForWork ? t.available : t.unavailable}
+		</span>
+		<span class="frame__rule"></span>
+	</div>
+</div>
+
+<style>
+	.frame {
+		position: fixed;
+		inset: var(--frame-inset);
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		pointer-events: none;
+	}
+
+	.frame__row {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+	}
+
+	.frame__label {
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.frame__rule {
+		flex: 1;
+		height: 1px;
+		background: var(--line);
+		transform-origin: left center;
+		animation: rule-draw 1200ms var(--ease-out-quart) 200ms both;
+	}
+
+	.frame__row--top .frame__label {
+		animation: annotation-in 700ms var(--ease-out-expo) 900ms both;
+	}
+
+	.frame__row--bottom .frame__label {
+		animation: annotation-in 700ms var(--ease-out-expo) 1050ms both;
+	}
+
+	.frame__status {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.frame__dot {
+		width: 5px;
+		height: 5px;
+		border-radius: 999px;
+		background: var(--fg-muted);
+	}
+
+	.frame__dot[data-on] {
+		background: var(--accent);
+		animation: pulse 2600ms ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			opacity: 1;
+			box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 45%, transparent);
+		}
+		50% {
+			opacity: 0.75;
+			box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 0%, transparent);
+		}
+	}
+
+	@keyframes rule-draw {
+		from {
+			transform: scaleX(0);
+		}
+		to {
+			transform: scaleX(1);
+		}
+	}
+
+	@keyframes annotation-in {
+		from {
+			clip-path: inset(0 0 100% 0);
+			opacity: 0;
+		}
+		to {
+			clip-path: inset(0 0 -0.2em 0);
+			opacity: 1;
+		}
+	}
+
+	/* The coordinates are the first thing to go when width gets tight — the
+	   clock and the availability status both carry more weight. */
+	@media (max-width: 560px) {
+		.frame__label--coords {
+			display: none;
+		}
+	}
+</style>

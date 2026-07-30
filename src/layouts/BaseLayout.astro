@@ -1,0 +1,53 @@
+---
+import { Font } from 'astro:assets';
+import { copy, type Locale } from '../content/site';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description: string;
+	locale?: Locale;
+}
+
+const { title, description, locale = 'en' } = Astro.props;
+const t = copy[locale];
+---
+
+<html lang={locale}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+
+		<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+
+		{/* Resolve the theme before first paint so dark-mode reloads never flash white. */}
+		<script is:inline>
+			(() => {
+				let stored = null;
+				try {
+					stored = localStorage.getItem('theme');
+				} catch {}
+				const theme =
+					stored ??
+					(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				document.documentElement.dataset.theme = theme;
+			})();
+		</script>
+
+		{/* Display face is the LCP element, so it preloads. The mono face is not. */}
+		<Font cssVariable="--font-general-sans" preload />
+		<Font cssVariable="--font-geist-mono" />
+	</head>
+
+	<body>
+		<a class="skip-link" href="#main">{t.skip}</a>
+		<slot />
+	</body>
+</html>
