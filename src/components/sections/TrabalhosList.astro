@@ -1,0 +1,303 @@
+---
+import { copy, projects, type Locale } from '../../content/site';
+import { localePath } from '../../lib/i18n';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'pt' } = Astro.props;
+const t = copy[locale];
+const base = localePath('/trabalhos', locale);
+---
+
+<section class="trabalhos" id="main" aria-labelledby="trabalhos-label">
+	<header class="trabalhos__head">
+		<h1 class="trabalhos__label" id="trabalhos-label">{t.workLabel}</h1>
+		<span class="trabalhos__rule" aria-hidden="true"></span>
+		<span class="trabalhos__meta">{String(projects.length).padStart(2, '0')}</span>
+	</header>
+
+	<p class="trabalhos__lead">{t.trabalhosLead}</p>
+
+	{/*
+	  Same /projects/<slug>.mp4 + /projects/<slug>-poster.jpg convention as the
+	  home teaser — see Work.astro. No file yet, no code change once one lands.
+	*/}
+	<ul class="trabalhos__list" role="list">
+		{
+			projects.map((project, index) => {
+				const mediaBase = `/projects/${project.slug}`;
+
+				return (
+					<li class="trabalhos__item" data-reveal>
+						<a class="trabalhos__card" href={`${base}/${project.slug}`}>
+							<div class="trabalhos__media" data-preview>
+								<div class="trabalhos__media-fallback" aria-hidden="true">
+									<span>{project.name.charAt(0)}</span>
+								</div>
+								<video
+									class="trabalhos__media-video"
+									muted
+									loop
+									playsinline
+									preload="none"
+									poster={`${mediaBase}-poster.jpg`}
+									aria-hidden="true"
+								>
+									<source src={`${mediaBase}.mp4`} type="video/mp4" />
+								</video>
+							</div>
+
+							<div class="trabalhos__body">
+								<div class="trabalhos__row">
+									<span class="trabalhos__index">{String(index + 1).padStart(2, '0')}</span>
+									<span class="trabalhos__year">{project.year}</span>
+								</div>
+
+								<h2 class="trabalhos__name">{project.name}</h2>
+								<p class="trabalhos__summary">{project.summary[locale]}</p>
+
+								<ul class="trabalhos__stack" role="list">
+									{project.stack.map((item) => (
+										<li>{item}</li>
+									))}
+								</ul>
+
+								<span class="trabalhos__cta">
+									{t.viewProject}
+									<svg class="trabalhos__arrow" viewBox="0 0 12 12" aria-hidden="true">
+										<path
+											d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="1.2"
+										/>
+									</svg>
+								</span>
+							</div>
+						</a>
+					</li>
+				);
+			})
+		}
+	</ul>
+</section>
+
+<script>
+	import { initPreviews } from '../../scripts/preview';
+	initPreviews();
+</script>
+
+<style>
+	.trabalhos {
+		position: relative;
+		z-index: 1;
+		max-width: 1240px;
+		margin-inline: auto;
+		padding: calc(var(--frame-inset) + 5rem) var(--frame-inset)
+			clamp(4.5rem, 12vh, 8.5rem);
+	}
+
+	.trabalhos__head {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+	}
+
+	.trabalhos__label,
+	.trabalhos__meta {
+		margin: 0;
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		font-weight: 400;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.trabalhos__rule {
+		flex: 1;
+		height: 1px;
+		background: var(--line);
+	}
+
+	.trabalhos__lead {
+		max-width: 46ch;
+		margin: clamp(2rem, 5vh, 3rem) 0 0;
+		font-size: clamp(1.25rem, 0.9rem + 1.4vw, 1.875rem);
+		line-height: 1.35;
+		letter-spacing: -0.02em;
+		text-wrap: balance;
+	}
+
+	.trabalhos__list {
+		display: flex;
+		flex-direction: column;
+		margin: clamp(3rem, 7vh, 4.5rem) 0 0;
+		padding: 0;
+		border-top: 1px solid var(--line);
+	}
+
+	.trabalhos__item {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.trabalhos__card {
+		display: grid;
+		grid-template-columns: minmax(0, 30%) minmax(0, 1fr);
+		align-items: center;
+		gap: clamp(1.75rem, 4vw, 3.5rem);
+		padding: clamp(1.75rem, 4vh, 2.75rem) 0;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	/* --- Media --------------------------------------------------------- */
+
+	.trabalhos__media {
+		position: relative;
+		aspect-ratio: 4 / 3;
+		overflow: hidden;
+		background: var(--stage, var(--bg));
+		border: 1px solid var(--line);
+		transition: border-color 260ms var(--ease-out-expo);
+	}
+
+	.trabalhos__media-fallback {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		background-image: repeating-linear-gradient(
+			-45deg,
+			var(--line) 0,
+			var(--line) 1px,
+			transparent 1px,
+			transparent 12px
+		);
+	}
+
+	.trabalhos__media-fallback span {
+		font-size: clamp(2rem, 5vw, 3rem);
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		color: var(--fg-muted);
+		opacity: 0.5;
+	}
+
+	.trabalhos__media-video {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.trabalhos__media-video[hidden] {
+		display: none;
+	}
+
+	/* --- Body ------------------------------------------------------------ */
+
+	.trabalhos__body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.trabalhos__row {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.trabalhos__index,
+	.trabalhos__year {
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.trabalhos__name {
+		margin: 0;
+		font-size: clamp(1.625rem, 1.2rem + 1.6vw, 2.5rem);
+		font-weight: 600;
+		line-height: 1.06;
+		letter-spacing: -0.03em;
+		transition: color 260ms var(--ease-out-expo);
+	}
+
+	.trabalhos__summary {
+		max-width: 52ch;
+		margin: 0;
+		color: var(--fg-muted);
+		font-size: 1rem;
+		line-height: 1.6;
+		text-wrap: pretty;
+	}
+
+	.trabalhos__stack {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem 0.5rem;
+		margin: 0.25rem 0 0;
+		padding: 0;
+	}
+
+	.trabalhos__stack li {
+		padding: 0.2rem 0.5rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.trabalhos__cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
+		color: var(--fg);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.trabalhos__arrow {
+		width: 11px;
+		height: 11px;
+		transition: transform 300ms var(--ease-out-expo);
+	}
+
+	.trabalhos__card:hover .trabalhos__name,
+	.trabalhos__card:focus-visible .trabalhos__name,
+	.trabalhos__card:hover .trabalhos__cta,
+	.trabalhos__card:focus-visible .trabalhos__cta {
+		color: var(--accent);
+	}
+
+	.trabalhos__card:hover .trabalhos__media,
+	.trabalhos__card:focus-visible .trabalhos__media {
+		border-color: var(--accent);
+	}
+
+	.trabalhos__card:hover .trabalhos__arrow,
+	.trabalhos__card:focus-visible .trabalhos__arrow {
+		transform: translate(2px, -2px);
+	}
+
+	@media (max-width: 720px) {
+		.trabalhos__card {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

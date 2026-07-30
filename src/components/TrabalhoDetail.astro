@@ -1,0 +1,285 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Backdrop from './background/Backdrop.astro';
+import MeshCanvas from './background/MeshCanvas.astro';
+import Nav from './nav/Nav.astro';
+import BlueprintFrame from './frame/BlueprintFrame.astro';
+import Footer from './Footer.astro';
+import { copy, projects, type Locale } from '../content/site';
+import { localePath } from '../lib/i18n';
+
+type Project = (typeof projects)[number];
+
+interface Props {
+	locale: Locale;
+	project: Project;
+}
+
+const { locale, project } = Astro.props;
+const t = copy[locale];
+const base = localePath('/trabalhos', locale);
+const mediaBase = `/projects/${project.slug}`;
+const title = `${project.name} — ${t.trabalhosTitle}`;
+---
+
+<BaseLayout locale={locale} title={title} description={project.summary[locale]}>
+	<Backdrop />
+	<MeshCanvas />
+	<BlueprintFrame locale={locale} />
+	<Nav locale={locale} />
+
+	<section class="trabalho" id="main" aria-labelledby="trabalho-name">
+		<a class="trabalho__back" href={base} data-reveal>
+			<svg class="trabalho__back-arrow" viewBox="0 0 12 12" aria-hidden="true">
+				<path d="M9.5 2.5 2.5 9.5M8 9.5H2.5V4" fill="none" stroke="currentColor" stroke-width="1.2" />
+			</svg>
+			{t.trabalhosBack}
+		</a>
+
+		<header class="trabalho__head" data-reveal>
+			<div class="trabalho__row">
+				<span class="trabalho__year">{project.year}</span>
+				{
+					project.url && (
+						<a class="trabalho__visit" href={project.url} target="_blank" rel="noopener" data-magnetic>
+							{t.visitSite}
+							<svg class="trabalho__visit-arrow" viewBox="0 0 12 12" aria-hidden="true">
+								<path
+									d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.2"
+								/>
+							</svg>
+						</a>
+					)
+				}
+			</div>
+
+			<h1 class="trabalho__name" id="trabalho-name">{project.name}</h1>
+
+			<ul class="trabalho__stack" role="list">
+				{project.stack.map((item) => <li>{item}</li>)}
+			</ul>
+		</header>
+
+		<div class="trabalho__media" data-preview data-reveal>
+			<div class="trabalho__media-fallback" aria-hidden="true">
+				<span>{project.name.charAt(0)}</span>
+			</div>
+			<video
+				class="trabalho__media-video"
+				muted
+				loop
+				playsinline
+				preload="none"
+				poster={`${mediaBase}-poster.jpg`}
+				aria-hidden="true"
+			>
+				<source src={`${mediaBase}.mp4`} type="video/mp4" />
+			</video>
+		</div>
+
+		<p class="trabalho__description" data-reveal>{project.description[locale]}</p>
+	</section>
+
+	<Footer locale={locale} />
+</BaseLayout>
+
+<script>
+	import { initNav } from '../scripts/nav';
+	import { initTheme } from '../scripts/theme';
+	import { initMagnetic } from '../scripts/magnetic';
+	import { initMotion } from '../scripts/motion';
+	import { initPreviews } from '../scripts/preview';
+
+	initTheme();
+	initNav();
+	initMagnetic();
+	initPreviews();
+	initMotion();
+</script>
+
+<style>
+	.trabalho {
+		position: relative;
+		z-index: 1;
+		max-width: 1000px;
+		margin-inline: auto;
+		padding: calc(var(--frame-inset) + 5rem) var(--frame-inset)
+			clamp(4.5rem, 12vh, 8.5rem);
+	}
+
+	.trabalho__back {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		text-decoration: none;
+		transition: color 220ms var(--ease-out-quart);
+	}
+
+	.trabalho__back-arrow {
+		width: 10px;
+		height: 10px;
+		rotate: 225deg;
+		transition: transform 260ms var(--ease-out-quart);
+	}
+
+	.trabalho__back:hover,
+	.trabalho__back:focus-visible {
+		color: var(--accent);
+	}
+
+	.trabalho__back:hover .trabalho__back-arrow,
+	.trabalho__back:focus-visible .trabalho__back-arrow {
+		transform: translate(-2px, 2px);
+	}
+
+	.trabalho__head {
+		margin-top: clamp(2rem, 5vh, 3rem);
+	}
+
+	.trabalho__row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	.trabalho__year {
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.trabalho__visit {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.625rem 1.125rem;
+		border: 1px solid transparent;
+		border-radius: 999px;
+		background: var(--fg);
+		color: var(--bg);
+		font-size: 0.875rem;
+		font-weight: 500;
+		letter-spacing: -0.008em;
+		text-decoration: none;
+		white-space: nowrap;
+		transform: translate3d(var(--mx, 0), var(--my, 0), 0);
+		transition:
+			background-color 220ms var(--ease-out-quart),
+			color 220ms var(--ease-out-quart);
+	}
+
+	.trabalho__visit:hover,
+	.trabalho__visit:focus-visible {
+		background: var(--accent);
+		color: #ffffff;
+	}
+
+	.trabalho__visit-arrow {
+		width: 11px;
+		height: 11px;
+		transition: translate 260ms var(--ease-out-quart);
+	}
+
+	.trabalho__visit:hover .trabalho__visit-arrow,
+	.trabalho__visit:focus-visible .trabalho__visit-arrow {
+		translate: 2px -2px;
+	}
+
+	.trabalho__name {
+		margin: 0.75rem 0 0;
+		font-size: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+		font-weight: 600;
+		line-height: 1;
+		letter-spacing: -0.035em;
+		text-wrap: balance;
+	}
+
+	.trabalho__stack {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem 0.5rem;
+		margin: 1.25rem 0 0;
+		padding: 0;
+	}
+
+	.trabalho__stack li {
+		padding: 0.2rem 0.5rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.trabalho__media {
+		position: relative;
+		aspect-ratio: 16 / 10;
+		overflow: hidden;
+		margin-top: clamp(2.5rem, 6vh, 4rem);
+		background: var(--stage, var(--bg));
+		border: 1px solid var(--line);
+	}
+
+	.trabalho__media-fallback {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		background-image: repeating-linear-gradient(
+			-45deg,
+			var(--line) 0,
+			var(--line) 1px,
+			transparent 1px,
+			transparent 12px
+		);
+	}
+
+	.trabalho__media-fallback span {
+		font-size: clamp(3rem, 8vw, 5rem);
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		color: var(--fg-muted);
+		opacity: 0.5;
+	}
+
+	.trabalho__media-video {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.trabalho__media-video[hidden] {
+		display: none;
+	}
+
+	.trabalho__description {
+		max-width: 62ch;
+		margin: clamp(2.5rem, 6vh, 4rem) 0 0;
+		font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+		line-height: 1.65;
+		color: var(--fg-muted);
+		text-wrap: pretty;
+	}
+
+	@media (max-width: 720px) {
+		.trabalho__row {
+			flex-wrap: wrap;
+		}
+	}
+</style>

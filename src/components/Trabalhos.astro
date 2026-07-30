@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Backdrop from './background/Backdrop.astro';
+import MeshCanvas from './background/MeshCanvas.astro';
+import Nav from './nav/Nav.astro';
+import BlueprintFrame from './frame/BlueprintFrame.astro';
+import TrabalhosList from './sections/TrabalhosList.astro';
+import Footer from './Footer.astro';
+import { copy, type Locale } from '../content/site';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = copy[locale];
+---
+
+<BaseLayout locale={locale} title={t.trabalhosTitle} description={t.trabalhosDescription}>
+	<Backdrop />
+	<MeshCanvas />
+	<BlueprintFrame locale={locale} />
+	<Nav locale={locale} />
+	<TrabalhosList locale={locale} />
+	<Footer locale={locale} />
+</BaseLayout>
+
+<script>
+	import { initNav } from '../scripts/nav';
+	import { initTheme } from '../scripts/theme';
+	import { initMotion } from '../scripts/motion';
+
+	initTheme();
+	initNav();
+	initMotion();
+</script>

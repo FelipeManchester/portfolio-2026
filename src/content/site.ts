@@ -53,6 +53,10 @@ export const projects = [
       en: 'A keepsake product built around a personalised gift flow, from first screen to checkout.',
       pt: 'Produto de recordação construído em torno de um fluxo de presente personalizado, da primeira tela ao checkout.',
     },
+    description: {
+      en: 'A keepsake product built around a personalised gift flow, from first screen to checkout. The interface leans on motion and copy that keep the moment feeling personal rather than transactional, while the checkout and order pipeline stay fast enough to hold up under gifting-season traffic.',
+      pt: 'Produto de recordação construído em torno de um fluxo de presente personalizado, da primeira tela ao checkout. A interface usa animação e microcopy para manter o momento pessoal em vez de transacional, com checkout e pipeline de pedidos rápidos o suficiente para picos de tráfego em datas comemorativas.',
+    },
   },
   {
     slug: 'itaborai-oxigenio',
@@ -63,6 +67,10 @@ export const projects = [
     summary: {
       en: 'Site for a medical and industrial gas supplier, with the catalogue editable by the team.',
       pt: 'Site para uma distribuidora de gases medicinais e industriais, com o catálogo editável pela equipe.',
+    },
+    description: {
+      en: 'Site for a medical and industrial gas supplier, with the catalogue editable by the team. Built on Astro for near-instant page loads, with Sanity as the CMS so product listings and specs stay current without a developer in the loop.',
+      pt: 'Site para uma distribuidora de gases medicinais e industriais, com o catálogo editável pela equipe. Construído em Astro para carregamento quase instantâneo, com Sanity como CMS para que listagens e especificações fiquem sempre atualizadas sem depender de um desenvolvedor.',
     },
   },
   {
@@ -75,6 +83,10 @@ export const projects = [
       en: 'A law firm site built for search visibility, with practice areas managed in the CMS.',
       pt: 'Site de escritório de advocacia feito para busca orgânica, com áreas de atuação gerenciadas no CMS.',
     },
+    description: {
+      en: 'A law firm site built for search visibility, with practice areas managed in the CMS. Semantic markup and page structure were prioritised throughout so the firm ranks for the practice areas it actually wants to be found for.',
+      pt: 'Site de escritório de advocacia feito para busca orgânica, com áreas de atuação gerenciadas no CMS. Marcação semântica e estrutura de página foram priorizadas para que o escritório rankeie pelas áreas de atuação que realmente importam.',
+    },
   },
 ] as const satisfies readonly {
   slug: string;
@@ -83,6 +95,7 @@ export const projects = [
   url: string;
   stack: readonly string[];
   summary: Localized;
+  description: Localized;
 }[];
 
 /**
@@ -172,6 +185,11 @@ type Copy = {
   workAll: string;
   visitSite: string;
   soon: string;
+  trabalhosTitle: string;
+  trabalhosDescription: string;
+  trabalhosLead: string;
+  trabalhosBack: string;
+  viewProject: string;
   skillsLabel: string;
   skillsLead: string;
   journalLabel: string;
@@ -209,7 +227,7 @@ export const copy: Record<Locale, Copy> = {
     ctaSecondary: 'Contact me',
     nav: [
       { label: 'Home', href: '/' },
-      { label: 'Projects', href: '/projects' },
+      { label: 'Projects', href: '/trabalhos' },
       { label: 'About', href: '/#about' },
       { label: 'Contact', href: '/contact' },
     ],
@@ -233,6 +251,12 @@ export const copy: Record<Locale, Copy> = {
     workAll: 'All projects',
     visitSite: 'Visit site',
     soon: 'Soon',
+    trabalhosTitle: 'Work — Felipe Manchester',
+    trabalhosDescription:
+      'Every build worth showing — product, catalogue and marketing sites, with the stack and the reasoning behind each.',
+    trabalhosLead: 'Every build worth showing, with the stack and the reasoning behind each one.',
+    trabalhosBack: 'All work',
+    viewProject: 'View project',
     skillsLabel: 'Skills',
     skillsLead: 'The stack behind the work above.',
     journalLabel: 'Journal',
@@ -268,7 +292,7 @@ export const copy: Record<Locale, Copy> = {
     ctaSecondary: 'Fale comigo',
     nav: [
       { label: 'Início', href: '/' },
-      { label: 'Projetos', href: '/projects' },
+      { label: 'Trabalhos', href: '/trabalhos' },
       { label: 'Sobre', href: '/#about' },
       { label: 'Contato', href: '/contact' },
     ],
@@ -292,6 +316,12 @@ export const copy: Record<Locale, Copy> = {
     workAll: 'Todos os projetos',
     visitSite: 'Ver site',
     soon: 'Em breve',
+    trabalhosTitle: 'Trabalhos — Felipe Manchester',
+    trabalhosDescription:
+      'Todos os projetos que valem a pena mostrar — produto, catálogo e sites institucionais, com a stack e o raciocínio por trás de cada um.',
+    trabalhosLead: 'Todos os projetos que valem a pena mostrar, com a stack e o raciocínio por trás de cada um.',
+    trabalhosBack: 'Todos os trabalhos',
+    viewProject: 'Ver projeto',
     skillsLabel: 'Habilidades',
     skillsLead: 'A stack por trás do trabalho acima.',
     journalLabel: 'Blog',
