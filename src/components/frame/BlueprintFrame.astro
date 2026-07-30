@@ -1,38 +1,25 @@
 ---
 import LocalTime from './LocalTime.astro';
 import LocaleSwitch from './LocaleSwitch.astro';
-import { copy, availableForWork, type Locale } from '../../content/site';
+import type { Locale } from '../../content/site';
 
 interface Props {
 	locale?: Locale;
 }
 
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
 ---
 
 {/*
-  The drafting frame: local time top-left, language switch top-right,
-  availability bottom-left. The empty bottom-right is deliberate — a technical
-  sheet is not symmetrical, and a fourth label would be filler.
-
-  Not aria-hidden as a whole: it holds a real navigation landmark and two pieces
-  of genuine information. Only the hairlines and the status dot are decorative.
+  The drafting frame: local time top-left, language switch top-right. Not
+  aria-hidden as a whole: it holds a real navigation landmark and a genuine
+  piece of information. Only the hairline is decorative.
 */}
 <div class="frame">
 	<div class="frame__row frame__row--top">
 		<span class="frame__label"><LocalTime locale={locale} /></span>
 		<span class="frame__rule" aria-hidden="true"></span>
 		<LocaleSwitch locale={locale} />
-	</div>
-
-	<div class="frame__row frame__row--bottom">
-		<p class="frame__label frame__status">
-			<span class="frame__dot" aria-hidden="true" data-on={availableForWork ? '' : undefined}
-			></span>
-			{availableForWork ? t.available : t.unavailable}
-		</p>
-		<span class="frame__rule" aria-hidden="true"></span>
 	</div>
 </div>
 
@@ -41,9 +28,6 @@ const t = copy[locale];
 		position: fixed;
 		inset: var(--frame-inset);
 		z-index: 2;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
 		/* Click-through so the frame never steals events from the hero; the
 		   language links opt back in themselves. */
 		pointer-events: none;
@@ -75,40 +59,6 @@ const t = copy[locale];
 
 	.frame__row--top > :not(.frame__rule) {
 		animation: annotation-in 700ms var(--ease-out-expo) 900ms both;
-	}
-
-	.frame__row--bottom > :not(.frame__rule) {
-		animation: annotation-in 700ms var(--ease-out-expo) 1050ms both;
-	}
-
-	.frame__status {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.frame__dot {
-		width: 5px;
-		height: 5px;
-		border-radius: 999px;
-		background: var(--fg-muted);
-	}
-
-	.frame__dot[data-on] {
-		background: var(--accent);
-		animation: pulse 2600ms ease-in-out infinite;
-	}
-
-	@keyframes pulse {
-		0%,
-		100% {
-			opacity: 1;
-			box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 45%, transparent);
-		}
-		50% {
-			opacity: 0.75;
-			box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 0%, transparent);
-		}
 	}
 
 	@keyframes rule-draw {

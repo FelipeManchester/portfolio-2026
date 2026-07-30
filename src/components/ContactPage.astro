@@ -5,7 +5,7 @@ import MeshCanvas from './background/MeshCanvas.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Footer from './Footer.astro';
-import { copy, email, socials, availableForWork, type Locale } from '../content/site';
+import { copy, email, socials, type Locale } from '../content/site';
 
 interface Props {
 	locale: Locale;
@@ -24,15 +24,7 @@ const t = copy[locale];
 	<section class="contact-page" id="main" aria-labelledby="contact-page-label">
 		<header class="contact-page__head">
 			<h1 class="contact-page__label" id="contact-page-label">{t.contactLabel}</h1>
-			<span class="contact-page__rule" aria-hidden="true"></span>
-			{
-				availableForWork && (
-					<span class="contact-page__status">
-						<span class="contact-page__dot" aria-hidden="true" />
-						{t.available}
-					</span>
-				)
-			}
+
 		</header>
 
 		<p class="contact-page__headline">{t.contactHeadline}</p>
