@@ -100,16 +100,6 @@ body {
   border-radius: 2px;
 }
 
-/* Set by cursor.ts only once the ring is actually running, so a visitor never
-   loses the arrow to a script that failed or never ran. */
-:root[data-cursor] {
-  cursor: none;
-}
-
-:root[data-cursor] * {
-  cursor: none;
-}
-
 .skip-link {
   position: absolute;
   top: 0;
