@@ -1,10 +1,10 @@
 /**
  * One requestAnimationFrame loop for the whole page.
  *
- * The pointer smoothing, the WebGL mesh and the magnetic buttons all need a
- * per-frame callback. Running three separate loops would triple the scheduling
- * overhead for no benefit, so they share this one. The loop stops itself
- * whenever nothing is subscribed.
+ * Anything needing a per-frame callback shares this loop rather than starting
+ * its own, so the scheduling overhead is paid once no matter how many effects
+ * are running. Currently only the magnetic buttons subscribe. The loop stops
+ * itself whenever nothing is.
  */
 
 export type Frame = (deltaMs: number, now: number) => void;

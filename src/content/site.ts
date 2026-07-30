@@ -150,15 +150,42 @@ export const posts = [
 export const skillGroups = [
   {
     label: { en: 'Front-end', pt: 'Front-end' },
-    skills: ['React', 'Next.js', 'Astro', 'TypeScript', 'JavaScript', 'Tailwind CSS', 'Sass'],
+    skills: [
+      'React',
+      'Next.js',
+      'Astro',
+      'TypeScript',
+      'JavaScript',
+      'Tailwind CSS',
+      'Sass',
+    ],
   },
   {
     label: { en: 'Back-end', pt: 'Back-end' },
-    skills: ['Node.js', 'Express', 'PHP', 'REST APIs', 'GraphQL', 'MySQL', 'Firebase', 'Supabase'],
+    skills: [
+      'Node.js',
+      'Express',
+      'PHP',
+      'REST APIs',
+      'GraphQL',
+      'MySQL',
+      'Firebase',
+      'Supabase',
+    ],
   },
   {
     label: { en: 'Tools & workflow', pt: 'Ferramentas' },
-    skills: ['WordPress', 'Sanity', 'Wix', 'Git', 'Figma', 'Jest', 'CI/CD', 'Vercel', 'Netlify'],
+    skills: [
+      'WordPress',
+      'Sanity',
+      'Wix',
+      'Git',
+      'Figma',
+      'Jest',
+      'CI/CD',
+      'Vercel',
+      'Netlify',
+    ],
   },
 ] as const satisfies readonly { label: Localized; skills: readonly string[] }[];
 
@@ -267,14 +294,16 @@ export const copy: Record<Locale, Copy> = {
     localTimeLabel: 'Local time',
     localeLabel: 'Language',
     workLabel: 'Selected work',
-    workLead: 'Three builds that show the range — product, catalogue, and a site that lives or dies on search.',
+    workLead:
+      'Three builds that show the range — product, catalogue, and a site that lives or dies on search.',
     workAll: 'All projects',
     visitSite: 'Visit site',
     soon: 'Soon',
     trabalhosTitle: 'Work — Felipe Manchester',
     trabalhosDescription:
       'Every build worth showing — product, catalogue and marketing sites, with the stack and the reasoning behind each.',
-    trabalhosLead: 'Every build worth showing, with the stack and the reasoning behind each one.',
+    trabalhosLead:
+      'Every build worth showing, with the stack and the reasoning behind each one.',
     trabalhosBack: 'All work',
     viewProject: 'View project',
     aboutTitle: 'About — Felipe Manchester',
@@ -285,19 +314,22 @@ export const copy: Record<Locale, Copy> = {
       'Most of what I do is invisible when it works: pages that load before anyone notices, layouts that hold up on the fifth screen size, code the next person can actually read. I like working close to the design, not just implementing it.',
     locationLabel: 'Based in',
     contactTitle: 'Contact — Felipe Manchester',
-    contactDescription: 'Get in touch by email or find Felipe Manchester on LinkedIn and GitHub.',
+    contactDescription:
+      'Get in touch by email or find Felipe Manchester on LinkedIn and GitHub.',
     socialsLabel: 'Elsewhere',
     blogTitle: 'Blog — Felipe Manchester',
     blogDescription:
       'Notes on performance, Astro, accessibility and building interfaces that hold up.',
-    blogLead: 'Notes on performance, Astro and building interfaces that hold up.',
+    blogLead:
+      'Notes on performance, Astro and building interfaces that hold up.',
     blogFilterLabel: 'Filter by tag',
     blogAllTag: 'All',
     blogEmpty: 'Nothing under this tag yet.',
     skillsLabel: 'Skills',
     skillsLead: 'The stack behind the work above.',
     journalLabel: 'Journal',
-    journalLead: 'Notes on performance, Astro and building interfaces that hold up.',
+    journalLead:
+      'Notes on performance, Astro and building interfaces that hold up.',
     journalAll: 'All posts',
     readTime: 'min read',
     contactLabel: 'Contact',
@@ -305,7 +337,8 @@ export const copy: Record<Locale, Copy> = {
     contactBody:
       'Open to full-time roles and freelance projects. The fastest way to reach me is email — I answer every message.',
     contactCta: 'Send a message',
-    footerNote: 'Built with Astro. Designed and coded in Campos dos Goytacazes.',
+    footerNote:
+      'Built with Astro. Designed and coded in Campos dos Goytacazes.',
     backToTop: 'Back to top',
   },
   pt: {
@@ -330,9 +363,9 @@ export const copy: Record<Locale, Copy> = {
     nav: [
       { label: 'Início', href: '/' },
       { label: 'Trabalhos', href: '/trabalhos' },
-      { label: 'Blog', href: '/blog' },
       { label: 'Sobre', href: '/sobre' },
       { label: 'Contato', href: '/contato' },
+      { label: 'Blog', href: '/blog' },
     ],
     navLabel: 'Principal',
     menuOpen: 'Abrir menu',
@@ -350,14 +383,16 @@ export const copy: Record<Locale, Copy> = {
     localTimeLabel: 'Horário local',
     localeLabel: 'Idioma',
     workLabel: 'Trabalhos',
-    workLead: 'Três projetos que mostram a variação — produto, catálogo e um site que depende de busca orgânica.',
+    workLead:
+      'Três projetos que mostram a variação — produto, catálogo e um site que depende de busca orgânica.',
     workAll: 'Todos os projetos',
     visitSite: 'Ver site',
     soon: 'Em breve',
     trabalhosTitle: 'Trabalhos — Felipe Manchester',
     trabalhosDescription:
       'Todos os projetos que valem a pena mostrar — produto, catálogo e sites institucionais, com a stack e o raciocínio por trás de cada um.',
-    trabalhosLead: 'Todos os projetos que valem a pena mostrar, com a stack e o raciocínio por trás de cada um.',
+    trabalhosLead:
+      'Todos os projetos que valem a pena mostrar, com a stack e o raciocínio por trás de cada um.',
     trabalhosBack: 'Todos os trabalhos',
     viewProject: 'Ver projeto',
     aboutTitle: 'Sobre — Felipe Manchester',
@@ -367,7 +402,8 @@ export const copy: Record<Locale, Copy> = {
       'A maior parte do que eu faço é invisível quando funciona: páginas que carregam antes de alguém notar, layouts que se sustentam na quinta tela diferente, código que a próxima pessoa consegue ler de fato. Gosto de trabalhar perto do design, não só implementá-lo.',
     locationLabel: 'Baseado em',
     contactTitle: 'Contato — Felipe Manchester',
-    contactDescription: 'Fale por e-mail ou encontre Felipe Manchester no LinkedIn e no GitHub.',
+    contactDescription:
+      'Fale por e-mail ou encontre Felipe Manchester no LinkedIn e no GitHub.',
     socialsLabel: 'Outros lugares',
     blogTitle: 'Blog — Felipe Manchester',
     blogDescription:
@@ -379,7 +415,8 @@ export const copy: Record<Locale, Copy> = {
     skillsLabel: 'Habilidades',
     skillsLead: 'A stack por trás do trabalho acima.',
     journalLabel: 'Blog',
-    journalLead: 'Notas sobre performance, Astro e interfaces que se sustentam.',
+    journalLead:
+      'Notas sobre performance, Astro e interfaces que se sustentam.',
     journalAll: 'Todos os posts',
     readTime: 'min de leitura',
     contactLabel: 'Contato',

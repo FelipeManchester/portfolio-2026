@@ -1,7 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Backdrop from './background/Backdrop.astro';
-import MeshCanvas from './background/MeshCanvas.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Footer from './Footer.astro';
@@ -33,8 +31,6 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 ---
 
 <BaseLayout locale={locale} title={t.blogTitle} description={t.blogDescription}>
-	<Backdrop />
-	<MeshCanvas />
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 

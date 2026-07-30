@@ -1,7 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Backdrop from './background/Backdrop.astro';
-import MeshCanvas from './background/MeshCanvas.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import TrabalhosList from './sections/TrabalhosList.astro';
@@ -17,8 +15,6 @@ const t = copy[locale];
 ---
 
 <BaseLayout locale={locale} title={t.trabalhosTitle} description={t.trabalhosDescription}>
-	<Backdrop />
-	<MeshCanvas />
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 	<TrabalhosList locale={locale} />

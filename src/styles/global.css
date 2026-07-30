@@ -16,11 +16,6 @@
   --fg-muted: #505050;
   --line: #ececec;
   --accent: #2b4dff;
-
-  /* Layer tuning that differs per theme */
-  --noise-opacity: 0.025;
-  --noise-blend: multiply;
-  --mesh-opacity: 0.5;
 }
 
 [data-theme='dark'] {
@@ -31,10 +26,6 @@
   --fg-muted: #8c8c8c;
   --line: #1f1f1f;
   --accent: #6e8cff;
-
-  --noise-opacity: 0.035;
-  --noise-blend: screen;
-  --mesh-opacity: 0.85;
 }
 
 @theme inline {
@@ -94,7 +85,6 @@
 
   --animate-rule-draw: rule-draw 1200ms var(--ease-out-quart) 200ms both;
   --animate-annotation: annotation-in 700ms var(--ease-out-expo) 900ms both;
-  --animate-grain: grain 4.8s steps(1) infinite;
 }
 
 /* The theme is an attribute on <html>, not a media query, so `dark:` has to be
@@ -220,35 +210,6 @@ body {
   to {
     clip-path: inset(0 0 -0.2em 0);
     opacity: 1;
-  }
-}
-
-/* Discrete jumps rather than a slide — the point is a living surface, not a
-   texture visibly panning across the screen. */
-@keyframes grain {
-  0% {
-    background-position: 0 0;
-  }
-  12.5% {
-    background-position: -34px 18px;
-  }
-  25% {
-    background-position: 22px -40px;
-  }
-  37.5% {
-    background-position: -48px -26px;
-  }
-  50% {
-    background-position: 40px 30px;
-  }
-  62.5% {
-    background-position: -18px 44px;
-  }
-  75% {
-    background-position: 36px -14px;
-  }
-  87.5% {
-    background-position: -42px 6px;
   }
 }
 
