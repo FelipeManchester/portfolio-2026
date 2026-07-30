@@ -32,6 +32,12 @@ export const stack = [
 /** Where mail from the contact section and the footer goes. */
 export const email = 'f.p2809@gmail.com';
 
+/** Recruiter-facing profiles, LinkedIn first. */
+export const socials = [
+  { label: 'LinkedIn', url: 'https://www.linkedin.com/in/felipemanchester' },
+  { label: 'GitHub', url: 'https://github.com/felipemanchester' },
+] as const satisfies readonly { label: string; url: string }[];
+
 type Localized = Record<Locale, string>;
 
 /**
@@ -190,6 +196,13 @@ type Copy = {
   trabalhosLead: string;
   trabalhosBack: string;
   viewProject: string;
+  aboutTitle: string;
+  aboutDescription: string;
+  aboutIntro: string;
+  locationLabel: string;
+  contactTitle: string;
+  contactDescription: string;
+  socialsLabel: string;
   skillsLabel: string;
   skillsLead: string;
   journalLabel: string;
@@ -228,8 +241,8 @@ export const copy: Record<Locale, Copy> = {
     nav: [
       { label: 'Home', href: '/' },
       { label: 'Projects', href: '/trabalhos' },
-      { label: 'About', href: '/#about' },
-      { label: 'Contact', href: '/contact' },
+      { label: 'About', href: '/sobre' },
+      { label: 'Contact', href: '/contato' },
     ],
     navLabel: 'Main',
     menuOpen: 'Open menu',
@@ -257,6 +270,16 @@ export const copy: Record<Locale, Copy> = {
     trabalhosLead: 'Every build worth showing, with the stack and the reasoning behind each one.',
     trabalhosBack: 'All work',
     viewProject: 'View project',
+    aboutTitle: 'About — Felipe Manchester',
+    aboutDescription:
+      'Full-stack developer based in Brazil, working across React, Next.js and Astro.',
+    // Placeholder copy — meant to be rewritten.
+    aboutIntro:
+      'Most of what I do is invisible when it works: pages that load before anyone notices, layouts that hold up on the fifth screen size, code the next person can actually read. I like working close to the design, not just implementing it.',
+    locationLabel: 'Based in',
+    contactTitle: 'Contact — Felipe Manchester',
+    contactDescription: 'Get in touch by email or find Felipe Manchester on LinkedIn and GitHub.',
+    socialsLabel: 'Elsewhere',
     skillsLabel: 'Skills',
     skillsLead: 'The stack behind the work above.',
     journalLabel: 'Journal',
@@ -293,8 +316,8 @@ export const copy: Record<Locale, Copy> = {
     nav: [
       { label: 'Início', href: '/' },
       { label: 'Trabalhos', href: '/trabalhos' },
-      { label: 'Sobre', href: '/#about' },
-      { label: 'Contato', href: '/contact' },
+      { label: 'Sobre', href: '/sobre' },
+      { label: 'Contato', href: '/contato' },
     ],
     navLabel: 'Principal',
     menuOpen: 'Abrir menu',
@@ -322,6 +345,15 @@ export const copy: Record<Locale, Copy> = {
     trabalhosLead: 'Todos os projetos que valem a pena mostrar, com a stack e o raciocínio por trás de cada um.',
     trabalhosBack: 'Todos os trabalhos',
     viewProject: 'Ver projeto',
+    aboutTitle: 'Sobre — Felipe Manchester',
+    aboutDescription:
+      'Desenvolvedor full-stack no Brasil, trabalhando com React, Next.js e Astro.',
+    aboutIntro:
+      'A maior parte do que eu faço é invisível quando funciona: páginas que carregam antes de alguém notar, layouts que se sustentam na quinta tela diferente, código que a próxima pessoa consegue ler de fato. Gosto de trabalhar perto do design, não só implementá-lo.',
+    locationLabel: 'Baseado em',
+    contactTitle: 'Contato — Felipe Manchester',
+    contactDescription: 'Fale por e-mail ou encontre Felipe Manchester no LinkedIn e no GitHub.',
+    socialsLabel: 'Outros lugares',
     skillsLabel: 'Habilidades',
     skillsLead: 'A stack por trás do trabalho acima.',
     journalLabel: 'Blog',

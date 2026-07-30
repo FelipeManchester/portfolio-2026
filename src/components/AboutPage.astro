@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Backdrop from './background/Backdrop.astro';
+import MeshCanvas from './background/MeshCanvas.astro';
+import Nav from './nav/Nav.astro';
+import BlueprintFrame from './frame/BlueprintFrame.astro';
+import Skills from './sections/Skills.astro';
+import Contact from './sections/Contact.astro';
+import Footer from './Footer.astro';
+import { copy, location, type Locale } from '../content/site';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = copy[locale];
+---
+
+<BaseLayout locale={locale} title={t.aboutTitle} description={t.aboutDescription}>
+	<Backdrop />
+	<MeshCanvas />
+	<BlueprintFrame locale={locale} />
+	<Nav locale={locale} />
+
+	<section class="about-page" id="main" aria-labelledby="about-page-label">
+		<header class="about-page__head">
+			<h1 class="about-page__label" id="about-page-label">{t.aboutLabel}</h1>
+			<span class="about-page__rule" aria-hidden="true"></span>
+			<span class="about-page__location">{t.locationLabel} — {location.label}</span>
+		</header>
+
+		<p class="about-page__lead">{t.aboutBody}</p>
+		<p class="about-page__body">{t.aboutIntro}</p>
+	</section>
+
+	<Skills locale={locale} />
+	<Contact locale={locale} />
+	<Footer locale={locale} />
+</BaseLayout>
+
+<script>
+	import { initNav } from '../scripts/nav';
+	import { initTheme } from '../scripts/theme';
+	import { initMagnetic } from '../scripts/magnetic';
+	import { initMotion } from '../scripts/motion';
+
+	initTheme();
+	initNav();
+	initMagnetic();
+	initMotion();
+</script>
+
+<style>
+	.about-page {
+		position: relative;
+		z-index: 1;
+		max-width: 1240px;
+		margin-inline: auto;
+		padding: calc(var(--frame-inset) + 5rem) var(--frame-inset)
+			clamp(3rem, 8vh, 5rem);
+	}
+
+	.about-page__head {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+	}
+
+	.about-page__label,
+	.about-page__location {
+		margin: 0;
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		font-weight: 400;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.about-page__rule {
+		flex: 1;
+		height: 1px;
+		background: var(--line);
+	}
+
+	.about-page__lead {
+		max-width: 22ch;
+		margin: clamp(2rem, 5vh, 3rem) 0 0;
+		font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3.25rem);
+		font-weight: 600;
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+		text-wrap: balance;
+	}
+
+	.about-page__body {
+		max-width: 54ch;
+		margin: clamp(1.5rem, 4vh, 2.25rem) 0 0;
+		color: var(--fg-muted);
+		font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+		line-height: 1.65;
+		text-wrap: pretty;
+	}
+
+	@media (max-width: 560px) {
+		.about-page__head {
+			flex-wrap: wrap;
+			row-gap: 0.5rem;
+		}
+
+		.about-page__rule {
+			order: 3;
+			flex-basis: 100%;
+		}
+	}
+</style>
