@@ -203,6 +203,12 @@ type Copy = {
   contactTitle: string;
   contactDescription: string;
   socialsLabel: string;
+  blogTitle: string;
+  blogDescription: string;
+  blogLead: string;
+  blogFilterLabel: string;
+  blogAllTag: string;
+  blogEmpty: string;
   skillsLabel: string;
   skillsLead: string;
   journalLabel: string;
@@ -241,6 +247,7 @@ export const copy: Record<Locale, Copy> = {
     nav: [
       { label: 'Home', href: '/' },
       { label: 'Projects', href: '/trabalhos' },
+      { label: 'Blog', href: '/blog' },
       { label: 'About', href: '/sobre' },
       { label: 'Contact', href: '/contato' },
     ],
@@ -280,6 +287,13 @@ export const copy: Record<Locale, Copy> = {
     contactTitle: 'Contact — Felipe Manchester',
     contactDescription: 'Get in touch by email or find Felipe Manchester on LinkedIn and GitHub.',
     socialsLabel: 'Elsewhere',
+    blogTitle: 'Blog — Felipe Manchester',
+    blogDescription:
+      'Notes on performance, Astro, accessibility and building interfaces that hold up.',
+    blogLead: 'Notes on performance, Astro and building interfaces that hold up.',
+    blogFilterLabel: 'Filter by tag',
+    blogAllTag: 'All',
+    blogEmpty: 'Nothing under this tag yet.',
     skillsLabel: 'Skills',
     skillsLead: 'The stack behind the work above.',
     journalLabel: 'Journal',
@@ -316,6 +330,7 @@ export const copy: Record<Locale, Copy> = {
     nav: [
       { label: 'Início', href: '/' },
       { label: 'Trabalhos', href: '/trabalhos' },
+      { label: 'Blog', href: '/blog' },
       { label: 'Sobre', href: '/sobre' },
       { label: 'Contato', href: '/contato' },
     ],
@@ -354,6 +369,13 @@ export const copy: Record<Locale, Copy> = {
     contactTitle: 'Contato — Felipe Manchester',
     contactDescription: 'Fale por e-mail ou encontre Felipe Manchester no LinkedIn e no GitHub.',
     socialsLabel: 'Outros lugares',
+    blogTitle: 'Blog — Felipe Manchester',
+    blogDescription:
+      'Notas sobre performance, Astro, acessibilidade e construção de interfaces que se sustentam.',
+    blogLead: 'Notas sobre performance, Astro e interfaces que se sustentam.',
+    blogFilterLabel: 'Filtrar por tag',
+    blogAllTag: 'Todos',
+    blogEmpty: 'Nada sob esta tag ainda.',
     skillsLabel: 'Habilidades',
     skillsLead: 'A stack por trás do trabalho acima.',
     journalLabel: 'Blog',

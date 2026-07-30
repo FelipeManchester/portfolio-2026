@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Backdrop from './background/Backdrop.astro';
+import MeshCanvas from './background/MeshCanvas.astro';
+import Nav from './nav/Nav.astro';
+import BlueprintFrame from './frame/BlueprintFrame.astro';
+import Footer from './Footer.astro';
+import { copy, posts, type Locale } from '../content/site';
+import { localePath } from '../lib/i18n';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = copy[locale];
+const base = localePath('/blog', locale);
+
+// Newest first regardless of the order they are authored in.
+const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date));
+
+// Tags are technology and topic names, so they are not translated — the same
+// call the skills register makes.
+const tags = [...new Set(sorted.map((post) => post.tag))];
+
+// Formatted on the server: the date is the same for every visitor, so there is
+// no reason to ship Intl work to the browser for it.
+const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', {
+	day: '2-digit',
+	month: 'short',
+	year: 'numeric',
+});
+---
+
+<BaseLayout locale={locale} title={t.blogTitle} description={t.blogDescription}>
+	<Backdrop />
+	<MeshCanvas />
+	<BlueprintFrame locale={locale} />
+	<Nav locale={locale} />
+
+	<section
+		class="relative z-1 mx-auto max-w-page px-frame pt-page-top pb-section"
+		id="main"
+		aria-labelledby="blog-label"
+	>
+		<header class="flex items-center gap-3.5">
+			<h1
+				class="m-0 font-mono text-xl tracking-mono whitespace-nowrap text-muted uppercase"
+				id="blog-label"
+			>
+				{t.journalLabel}
+			</h1>
+			<span class="h-px flex-1 bg-line" aria-hidden="true"></span>
+			<span
+				class="m-0 font-mono text-mono tracking-mono whitespace-nowrap text-muted uppercase tabular-nums"
+			>
+				{String(sorted.length).padStart(2, '0')}
+			</span>
+		</header>
+
+		<p class="mt-flow-md max-w-[46ch] text-lead leading-[1.35] tracking-[-0.02em] text-balance">
+			{t.blogLead}
+		</p>
+
+		{/*
+		  Hidden until filter.ts takes over, so a visitor never gets a control row
+		  that does nothing. Every post is in the markup either way.
+		*/}
+		<div
+			class="mt-flow-md flex flex-wrap items-center gap-x-2 gap-y-2"
+			data-filter
+			role="group"
+			aria-label={t.blogFilterLabel}
+			hidden
+		>
+			<button
+				type="button"
+				class="cursor-pointer rounded-full border border-line bg-transparent px-3 py-1.5 font-mono text-mono tracking-mono text-muted uppercase transition-[border-color,color] duration-220 ease-quart hover:border-[color-mix(in_oklab,var(--accent)_55%,var(--line))] hover:text-accent aria-pressed:border-fg aria-pressed:text-fg"
+				data-filter-tag="*"
+				aria-pressed="true"
+			>
+				{t.blogAllTag}
+			</button>
+			{
+				tags.map((tag) => (
+					<button
+						type="button"
+						class="cursor-pointer rounded-full border border-line bg-transparent px-3 py-1.5 font-mono text-mono tracking-mono text-muted uppercase transition-[border-color,color] duration-220 ease-quart hover:border-[color-mix(in_oklab,var(--accent)_55%,var(--line))] hover:text-accent aria-pressed:border-fg aria-pressed:text-fg"
+						data-filter-tag={tag}
+						aria-pressed="false"
+					>
+						{tag}
+					</button>
+				))
+			}
+		</div>
+
+		<ul class="mt-flow-lg flex list-none flex-col border-t border-line p-0" role="list">
+			{
+				sorted.map((post) => (
+					<li class="border-b border-line" data-post={post.tag} data-reveal>
+						<a
+							class="group/post grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-8 gap-y-3 py-[clamp(1.5rem,3.5vh,2.25rem)] text-inherit no-underline max-[720px]:grid-cols-1"
+							href={`${base}/${post.slug}`}
+						>
+							<div class="flex flex-col gap-3">
+								<div class="flex items-center gap-3 font-mono text-mono tracking-mono text-muted uppercase tabular-nums">
+									<time datetime={post.date}>{dateFormat.format(new Date(post.date))}</time>
+									<span class="text-accent">{post.tag}</span>
+								</div>
+
+								<h2 class="m-0 max-w-[28ch] text-project leading-[1.12] font-semibold tracking-[-0.03em] text-balance transition-colors duration-260 ease-expo group-hover/post:text-accent group-focus-visible/post:text-accent">
+									{post.title[locale]}
+								</h2>
+							</div>
+
+							<span class="inline-flex items-center gap-2 font-mono text-mono tracking-mono whitespace-nowrap text-muted uppercase tabular-nums transition-colors duration-260 ease-expo group-hover/post:text-accent group-focus-visible/post:text-accent">
+								{post.minutes} {t.readTime}
+								<svg
+									class="size-2.75 transition-transform duration-300 ease-expo group-hover/post:translate-x-0.5 group-hover/post:-translate-y-0.5 group-focus-visible/post:translate-x-0.5 group-focus-visible/post:-translate-y-0.5"
+									viewBox="0 0 12 12"
+									aria-hidden="true"
+								>
+									<path
+										d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.2"
+									/>
+								</svg>
+							</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+
+		<p class="mt-flow-md text-muted" data-filter-empty hidden>{t.blogEmpty}</p>
+	</section>
+
+	<Footer locale={locale} />
+</BaseLayout>
+
+<script>
+	import { initNav } from '../scripts/nav';
+	import { initTheme } from '../scripts/theme';
+	import { initFilter } from '../scripts/filter';
+	import { initMotion } from '../scripts/motion';
+
+	initTheme();
+	initNav();
+	initFilter();
+	initMotion();
+</script>
