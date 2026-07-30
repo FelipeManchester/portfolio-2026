@@ -1,0 +1,59 @@
+---
+import { copy, type Locale } from '../content/site';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'pt' } = Astro.props;
+const t = copy[locale];
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+	<p class="footer__note">{t.footerNote}</p>
+	<p class="footer__year">&copy; {year}</p>
+	<a class="footer__top" href="#main">{t.backToTop}</a>
+</footer>
+
+<style>
+	.footer {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1.5rem;
+		max-width: 1240px;
+		/* Bottom padding clears the fixed frame's availability label. */
+		margin-inline: auto;
+		padding: 1.5rem var(--frame-inset) calc(var(--frame-inset) + 2.5rem);
+		border-top: 1px solid var(--line);
+	}
+
+	.footer__note,
+	.footer__year,
+	.footer__top {
+		margin: 0;
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.footer__year {
+		font-variant-numeric: tabular-nums;
+	}
+
+	.footer__top {
+		margin-left: auto;
+		text-decoration: none;
+		transition: color 220ms var(--ease-out-quart);
+	}
+
+	.footer__top:hover,
+	.footer__top:focus-visible {
+		color: var(--accent);
+	}
+</style>

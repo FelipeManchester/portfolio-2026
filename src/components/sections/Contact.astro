@@ -1,0 +1,181 @@
+---
+import { copy, email, availableForWork, type Locale } from '../../content/site';
+import { localePath } from '../../lib/i18n';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'pt' } = Astro.props;
+const t = copy[locale];
+const contactHref = localePath('/contact', locale);
+---
+
+{/*
+  The last beat of the page, so it gets the largest type after the name itself.
+  The email is written out rather than hidden behind the button: a recruiter
+  who wants to paste an address into their own client should not have to open a
+  form to find it.
+*/}
+<section class="contact" id="contact" aria-labelledby="contact-label">
+	<header class="contact__head">
+		<h2 class="contact__label" id="contact-label" data-reveal>{t.contactLabel}</h2>
+		<span class="contact__rule" aria-hidden="true"></span>
+		{
+			availableForWork && (
+				<span class="contact__status" data-reveal>
+					<span class="contact__dot" aria-hidden="true" />
+					{t.available}
+				</span>
+			)
+		}
+	</header>
+
+	<p class="contact__headline" data-reveal>{t.contactHeadline}</p>
+	<p class="contact__body" data-reveal>{t.contactBody}</p>
+
+	<div class="contact__actions" data-reveal>
+		<a class="contact__button" href={contactHref} data-magnetic>{t.contactCta}</a>
+
+		<a class="contact__email" href={`mailto:${email}`}>
+			{email}
+			<span class="contact__email-rule" aria-hidden="true"></span>
+		</a>
+	</div>
+</section>
+
+<style>
+	.contact {
+		position: relative;
+		z-index: 1;
+		max-width: 1240px;
+		margin-inline: auto;
+		padding: clamp(4.5rem, 12vh, 8.5rem) var(--frame-inset) clamp(3.5rem, 9vh, 6rem);
+	}
+
+	.contact__head {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+	}
+
+	.contact__label,
+	.contact__status {
+		margin: 0;
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		font-weight: 400;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.contact__rule {
+		flex: 1;
+		height: 1px;
+		background: var(--line);
+	}
+
+	.contact__status {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.contact__dot {
+		width: 5px;
+		height: 5px;
+		border-radius: 999px;
+		background: var(--accent);
+	}
+
+	.contact__headline {
+		max-width: 14ch;
+		margin: clamp(2.5rem, 6vh, 4rem) 0 0;
+		font-size: clamp(2.75rem, 1.2rem + 6.5vw, 7rem);
+		font-weight: 600;
+		line-height: 0.95;
+		letter-spacing: -0.045em;
+		text-wrap: balance;
+	}
+
+	.contact__body {
+		max-width: 44ch;
+		margin: clamp(1.5rem, 3vh, 2rem) 0 0;
+		color: var(--fg-muted);
+		font-size: 1rem;
+		line-height: 1.65;
+		text-wrap: pretty;
+	}
+
+	.contact__actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1.25rem 2rem;
+		margin-top: clamp(2rem, 5vh, 3rem);
+	}
+
+	/* Same pill as the hero's primary call to action — this is the same action,
+	   so it should not be a different object. */
+	.contact__button {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.875rem 1.5rem;
+		border-radius: 999px;
+		background: var(--fg);
+		color: var(--bg);
+		font-size: 1rem;
+		font-weight: 500;
+		letter-spacing: -0.008em;
+		text-decoration: none;
+		white-space: nowrap;
+		transform: translate3d(var(--mx, 0), var(--my, 0), 0);
+		box-shadow:
+			0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent),
+			0 10px 26px -14px color-mix(in oklab, var(--fg) 55%, transparent);
+		transition:
+			background-color 220ms var(--ease-out-quart),
+			color 220ms var(--ease-out-quart),
+			box-shadow 220ms var(--ease-out-quart);
+	}
+
+	.contact__button:hover {
+		background: var(--accent);
+		color: #ffffff;
+		box-shadow:
+			0 1px 2px color-mix(in oklab, var(--accent) 14%, transparent),
+			0 14px 30px -14px color-mix(in oklab, var(--accent) 60%, transparent);
+	}
+
+	.contact__email {
+		display: inline-flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		color: var(--fg);
+		font-family: var(--font-mono);
+		font-size: var(--step-mono);
+		letter-spacing: 0.06em;
+		text-decoration: none;
+	}
+
+	.contact__email-rule {
+		height: 1px;
+		background: var(--line);
+		transform-origin: left center;
+		transition:
+			transform 400ms var(--ease-out-expo),
+			background-color 260ms linear;
+	}
+
+	.contact__email:hover,
+	.contact__email:focus-visible {
+		color: var(--accent);
+	}
+
+	.contact__email:hover .contact__email-rule,
+	.contact__email:focus-visible .contact__email-rule {
+		background: var(--accent);
+	}
+</style>

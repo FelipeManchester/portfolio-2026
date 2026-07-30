@@ -21,7 +21,6 @@
   --noise-opacity: 0.025;
   --noise-blend: multiply;
   --mesh-opacity: 0.5;
-  --grid-opacity: 1;
 }
 
 [data-theme='dark'] {
@@ -36,9 +35,6 @@
   --noise-opacity: 0.035;
   --noise-blend: screen;
   --mesh-opacity: 0.85;
-  /* --line is already lifted for dark; the field itself is pulled back so the
-     lit dots under the cursor keep their contrast against it. */
-  --grid-opacity: 0.8;
 }
 
 @theme inline {
@@ -102,6 +98,16 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* Set by cursor.ts only once the ring is actually running, so a visitor never
+   loses the arrow to a script that failed or never ran. */
+:root[data-cursor] {
+  cursor: none;
+}
+
+:root[data-cursor] * {
+  cursor: none;
 }
 
 .skip-link {

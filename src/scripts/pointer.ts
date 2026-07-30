@@ -52,8 +52,8 @@ let listening = false;
  * Only fine pointers are tracked. On touch there is no hover state to react
  * to, and the listeners would run during every scroll for nothing.
  *
- * Safe to call from every layer that reads `pointer` — the grid and the mesh
- * both do, and neither should have to know whether the other ran first.
+ * Safe to call from every layer that reads `pointer`, so a caller never has to
+ * know whether another layer already got here first.
  */
 export function initPointer(): void {
 	if (listening) return;

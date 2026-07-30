@@ -1,11 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Backdrop from './background/Backdrop.astro';
-import GridField from './background/GridField.astro';
 import MeshCanvas from './background/MeshCanvas.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Hero from './hero/Hero.astro';
+import Work from './sections/Work.astro';
+import Skills from './sections/Skills.astro';
+import Journal from './sections/Journal.astro';
+import Contact from './sections/Contact.astro';
+import Footer from './Footer.astro';
+import Cursor from './Cursor.astro';
 import { copy, type Locale } from '../content/site';
 
 interface Props {
@@ -18,11 +23,16 @@ const t = copy[locale];
 
 <BaseLayout locale={locale} title={t.title} description={t.description}>
 	<Backdrop />
-	<GridField />
 	<MeshCanvas />
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 	<Hero locale={locale} />
+	<Work locale={locale} />
+	<Skills locale={locale} />
+	<Journal locale={locale} />
+	<Contact locale={locale} />
+	<Footer locale={locale} />
+	<Cursor />
 </BaseLayout>
 
 <script>

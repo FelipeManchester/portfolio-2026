@@ -52,7 +52,7 @@ const contactHref = localePath('/contact', locale);
 		padding: 0.875rem 1.5rem;
 		border: 1px solid transparent;
 		border-radius: 999px;
-		font-size: 0.9375rem;
+		font-size: 1rem;
 		font-weight: 500;
 		letter-spacing: -0.008em;
 		text-decoration: none;
@@ -84,6 +84,11 @@ const contactHref = localePath('/contact', locale);
 
 	.cta__button--secondary {
 		border-color: var(--line);
+		/* Same glass vocabulary as the nav pill: without an opaque-enough fill,
+		   the grid field behind the hero shows straight through the outline. */
+		background: color-mix(in oklab, var(--bg) 82%, transparent);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
 		color: var(--fg);
 	}
 
