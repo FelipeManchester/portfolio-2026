@@ -22,15 +22,31 @@ const items = t.nav.map((item) => ({
 {/* Watched by an IntersectionObserver to drive the scrolled state. */}
 <div data-nav-sentinel aria-hidden="true"></div>
 
-<header class="nav" data-nav>
-	<nav class="nav__pill" aria-label={t.navLabel}>
-		<ul class="nav__list" id="nav-menu" data-menu-panel>
+<header class="group fixed top-[clamp(0.75rem,2vw,1.5rem)] left-1/2 z-50 -translate-x-1/2" data-nav>
+	{/*
+	  Scrolled: tighter, and the glass reads more clearly against content — the
+	  `group-data-scrolled` half of every pair below.
+	*/}
+	<nav
+		class="relative flex items-center gap-1 rounded-full border border-line bg-bg/72 py-1.75 pr-2 pl-3.5 shadow-pill backdrop-blur-md backdrop-saturate-[1.4] transition-[padding,background-color,box-shadow,backdrop-filter] duration-300 ease-quart group-data-scrolled:bg-bg/88 group-data-scrolled:py-1.25 group-data-scrolled:shadow-pill-scrolled group-data-scrolled:backdrop-blur-[20px] group-data-scrolled:backdrop-saturate-[1.6] max-[720px]:px-2"
+		aria-label={t.navLabel}
+	>
+		{/*
+		  One <ul> serves as the inline list on desktop and the drop panel below
+		  720px. It is centred under the pill with a negative margin rather than a
+		  transform, so the open/close animation keeps `translate` to itself.
+		*/}
+		<ul
+			class="m-0 flex list-none items-center gap-0.5 p-0 max-[720px]:absolute max-[720px]:top-[calc(100%+0.5rem)] max-[720px]:left-1/2 max-[720px]:-ms-26 max-[720px]:w-52 max-[720px]:origin-top max-[720px]:-translate-y-1.5 max-[720px]:scale-[0.98] max-[720px]:flex-col max-[720px]:items-stretch max-[720px]:gap-0 max-[720px]:rounded-[1.25rem] max-[720px]:border max-[720px]:border-line max-[720px]:bg-bg/92 max-[720px]:p-2 max-[720px]:opacity-0 max-[720px]:shadow-panel max-[720px]:backdrop-blur-[20px] max-[720px]:backdrop-saturate-[1.6] max-[720px]:transition-[opacity,translate,scale] max-[720px]:duration-260 max-[720px]:ease-quart max-[720px]:data-open:translate-y-0 max-[720px]:data-open:scale-100 max-[720px]:data-open:opacity-100"
+			id="nav-menu"
+			data-menu-panel
+		>
 			{
 				items.map((item) => (
 					<li>
 						<a
 							href={item.href}
-							class="nav__link"
+							class="block rounded-full px-2.75 py-1.5 text-sm font-medium tracking-[-0.006em] whitespace-nowrap text-muted no-underline transition-[color,background-color] duration-180 ease-linear hover:bg-fg/5 hover:text-fg aria-[current=page]:text-fg max-[720px]:px-3 max-[720px]:py-2.5 max-[720px]:text-base"
 							aria-current={item.href === current ? 'page' : undefined}
 						>
 							{item.label}
@@ -40,9 +56,10 @@ const items = t.nav.map((item) => ({
 			}
 		</ul>
 
+		{/* The disclosure button only exists at the collapsed breakpoint. */}
 		<button
 			type="button"
-			class="nav__trigger"
+			class="group/trigger hidden size-8 cursor-pointer flex-col justify-center gap-1 border-0 bg-none p-0 max-[720px]:flex"
 			data-menu-trigger
 			aria-expanded="false"
 			aria-controls="nav-menu"
@@ -50,179 +67,15 @@ const items = t.nav.map((item) => ({
 			data-label-open={t.menuOpen}
 			data-label-close={t.menuClose}
 		>
-			<span class="nav__bar"></span>
-			<span class="nav__bar"></span>
+			<span
+				class="mx-auto h-[1.25px] w-3.75 bg-muted transition-[translate,rotate,background-color] duration-320 ease-quart group-hover/trigger:bg-fg group-aria-expanded/trigger:translate-y-[2.625px] group-aria-expanded/trigger:rotate-45"
+			></span>
+			<span
+				class="mx-auto h-[1.25px] w-3.75 bg-muted transition-[translate,rotate,background-color] duration-320 ease-quart group-hover/trigger:bg-fg group-aria-expanded/trigger:translate-y-[-2.625px] group-aria-expanded/trigger:-rotate-45"
+			></span>
 		</button>
 
-		<span class="nav__rule" aria-hidden="true"></span>
+		<span class="mx-1.25 h-4.5 w-px bg-line" aria-hidden="true"></span>
 		<ThemeToggle locale={locale} />
 	</nav>
 </header>
-
-<style>
-	.nav {
-		position: fixed;
-		top: clamp(0.75rem, 2vw, 1.5rem);
-		left: 50%;
-		z-index: 50;
-		translate: -50% 0;
-	}
-
-	.nav__pill {
-		position: relative;
-		display: flex;
-		align-items: center;
-		gap: 0.25rem;
-		padding: 0.4375rem 0.5rem 0.4375rem 0.875rem;
-		border: 1px solid var(--line);
-		border-radius: 999px;
-		background: color-mix(in oklab, var(--bg) 72%, transparent);
-		backdrop-filter: blur(12px) saturate(1.4);
-		-webkit-backdrop-filter: blur(12px) saturate(1.4);
-		box-shadow: 0 1px 2px color-mix(in oklab, var(--fg) 4%, transparent);
-		transition:
-			padding 420ms var(--ease-out-quart),
-			background-color 300ms linear,
-			box-shadow 300ms linear,
-			backdrop-filter 300ms linear;
-	}
-
-	/* Scrolled: tighter, and the glass reads more clearly against content. */
-	.nav[data-scrolled] .nav__pill {
-		padding-block: 0.3125rem;
-		background: color-mix(in oklab, var(--bg) 88%, transparent);
-		backdrop-filter: blur(20px) saturate(1.6);
-		-webkit-backdrop-filter: blur(20px) saturate(1.6);
-		box-shadow:
-			0 1px 2px color-mix(in oklab, var(--fg) 5%, transparent),
-			0 10px 30px -18px color-mix(in oklab, var(--fg) 45%, transparent);
-	}
-
-	.nav__list {
-		display: flex;
-		align-items: center;
-		gap: 0.125rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.nav__link {
-		display: block;
-		padding: 0.375rem 0.6875rem;
-		border-radius: 999px;
-		color: var(--fg-muted);
-		font-size: 0.875rem;
-		font-weight: 500;
-		letter-spacing: -0.006em;
-		text-decoration: none;
-		white-space: nowrap;
-		transition:
-			color 180ms linear,
-			background-color 180ms linear;
-	}
-
-	.nav__link:hover {
-		color: var(--fg);
-		background: color-mix(in oklab, var(--fg) 5%, transparent);
-	}
-
-	.nav__link[aria-current='page'] {
-		color: var(--fg);
-	}
-
-	.nav__rule {
-		width: 1px;
-		height: 1.125rem;
-		margin-inline: 0.3125rem;
-		background: var(--line);
-	}
-
-	/* The disclosure button only exists at the collapsed breakpoint. */
-	.nav__trigger {
-		display: none;
-		flex-direction: column;
-		justify-content: center;
-		gap: 4px;
-		width: 2rem;
-		height: 2rem;
-		padding: 0;
-		border: 0;
-		background: none;
-		cursor: pointer;
-	}
-
-	.nav__bar {
-		width: 15px;
-		height: 1.25px;
-		margin-inline: auto;
-		background: var(--fg-muted);
-		transition:
-			translate 320ms var(--ease-out-quart),
-			rotate 320ms var(--ease-out-quart),
-			background-color 180ms linear;
-	}
-
-	.nav__trigger:hover .nav__bar {
-		background: var(--fg);
-	}
-
-	.nav__trigger[aria-expanded='true'] .nav__bar:first-child {
-		translate: 0 2.625px;
-		rotate: 45deg;
-	}
-
-	.nav__trigger[aria-expanded='true'] .nav__bar:last-child {
-		translate: 0 -2.625px;
-		rotate: -45deg;
-	}
-
-	@media (max-width: 720px) {
-		.nav__pill {
-			padding: 0.4375rem 0.5rem;
-		}
-
-		.nav__trigger {
-			display: flex;
-		}
-
-		.nav__list {
-			/* Centred under the pill with margin rather than a transform, so the
-			   open/close animation keeps `translate` to itself. */
-			position: absolute;
-			top: calc(100% + 0.5rem);
-			left: 50%;
-			width: 13rem;
-			margin-inline-start: -6.5rem;
-			flex-direction: column;
-			align-items: stretch;
-			gap: 0;
-			padding: 0.5rem;
-			border: 1px solid var(--line);
-			border-radius: 1.25rem;
-			background: color-mix(in oklab, var(--bg) 92%, transparent);
-			backdrop-filter: blur(20px) saturate(1.6);
-			-webkit-backdrop-filter: blur(20px) saturate(1.6);
-			box-shadow: 0 20px 40px -24px color-mix(in oklab, var(--fg) 50%, transparent);
-			opacity: 0;
-			translate: 0 -6px;
-			scale: 0.98;
-			transform-origin: top center;
-			transition:
-				opacity 260ms var(--ease-out-quart),
-				translate 260ms var(--ease-out-quart),
-				scale 260ms var(--ease-out-quart);
-		}
-
-		.nav__list[data-open] {
-			opacity: 1;
-			translate: 0 0;
-			scale: 1;
-		}
-
-		.nav__link {
-			padding: 0.625rem 0.75rem;
-			font-size: 1rem;
-		}
-	}
-</style>

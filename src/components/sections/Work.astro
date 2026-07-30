@@ -24,8 +24,14 @@ const projectsHref = localePath('/trabalhos', locale);
 	  under those names and it plays with no code change. Until then the video's
 	  own `error` event hides it (see preview.ts) and the lettered tile behind it
 	  stays as the card's art.
+
+	  The 1px gap plus the shared background is what draws every seam — one
+	  border per cell would double up where they meet.
 	*/}
-	<ul class="work" role="list">
+	<ul
+		class="mt-flow-lg grid grid-cols-3 gap-px border-y border-line bg-line p-0 max-[900px]:grid-cols-1"
+		role="list"
+	>
 		{
 			projects.map((project) => {
 				const Row = project.url ? 'a' : 'div';
@@ -35,14 +41,24 @@ const projectsHref = localePath('/trabalhos', locale);
 				const mediaBase = `/projects/${project.slug}`;
 
 				return (
-					<li class="work__item">
-						<Row class="work__card" data-preview data-reveal {...rowProps}>
-							<div class="work__media">
-								<div class="work__media-fallback" aria-hidden="true">
-									<span>{project.name.charAt(0)}</span>
+					<li class="bg-bg">
+						<Row
+							class="group/card flex h-full flex-col text-inherit no-underline"
+							data-preview
+							data-reveal
+							{...rowProps}
+						>
+							<div class="relative aspect-4/3 overflow-hidden border-b border-line bg-bg">
+								{/* The card's art until a real recording exists: an initial on a
+								    hairline diagonal field, the same drafting-sheet vocabulary as
+								    the rest of the page rather than a generic grey box. */}
+								<div class="hatch absolute inset-0 grid place-items-center" aria-hidden="true">
+									<span class="text-[clamp(2.5rem,6vw,3.5rem)] font-semibold tracking-[-0.03em] text-muted opacity-50">
+										{project.name.charAt(0)}
+									</span>
 								</div>
 								<video
-									class="work__media-video"
+									class="absolute inset-0 h-full w-full object-cover [&[hidden]]:hidden"
 									muted
 									loop
 									playsinline
@@ -54,13 +70,22 @@ const projectsHref = localePath('/trabalhos', locale);
 								</video>
 							</div>
 
-							<div class="work__body">
-								<div class="work__meta">
-									<span class="work__year">{project.year}</span>
-									<span class="work__action" data-soon={project.url ? undefined : ''}>
+							<div class="flex flex-1 flex-col gap-2.5 p-card">
+								<div class="flex items-center justify-between gap-4">
+									<span class="font-mono text-mono tracking-mono text-muted uppercase tabular-nums">
+										{project.year}
+									</span>
+									<span
+										class="inline-flex items-center gap-1.5 font-mono text-mono tracking-mono whitespace-nowrap text-muted uppercase tabular-nums transition-colors duration-260 ease-expo data-soon:opacity-60 group-hover/card:text-accent group-focus-visible/card:text-accent"
+										data-soon={project.url ? undefined : ''}
+									>
 										{project.url ? t.visitSite : t.soon}
 										{project.url && (
-											<svg class="work__arrow" viewBox="0 0 12 12" aria-hidden="true">
+											<svg
+												class="size-2.75 transition-transform duration-300 ease-expo group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 group-focus-visible/card:translate-x-0.5 group-focus-visible/card:-translate-y-0.5"
+												viewBox="0 0 12 12"
+												aria-hidden="true"
+											>
 												<path
 													d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
 													fill="none"
@@ -72,12 +97,18 @@ const projectsHref = localePath('/trabalhos', locale);
 									</span>
 								</div>
 
-								<h3 class="work__name">{project.name}</h3>
-								<p class="work__summary">{project.summary[locale]}</p>
+								<h3 class="m-0 text-project leading-[1.08] font-semibold tracking-[-0.03em] transition-colors duration-260 ease-expo group-hover/card:text-accent group-focus-visible/card:text-accent">
+									{project.name}
+								</h3>
+								<p class="m-0 text-[0.9375rem] leading-relaxed text-muted text-pretty">
+									{project.summary[locale]}
+								</p>
 
-								<ul class="work__stack" role="list">
+								<ul class="mt-auto flex flex-wrap gap-x-2 gap-y-1.5 pt-1.5" role="list">
 									{project.stack.map((item) => (
-										<li>{item}</li>
+										<li class="rounded-full border border-line px-2 py-0.5 font-mono text-mono tracking-mono text-muted uppercase">
+											{item}
+										</li>
 									))}
 								</ul>
 							</div>
@@ -88,9 +119,15 @@ const projectsHref = localePath('/trabalhos', locale);
 		}
 	</ul>
 
-	<a class="work__all" href={projectsHref} data-reveal>
+	<a
+		class="group/all mt-flow-md inline-flex items-center gap-3.5 font-mono text-mono tracking-mono text-fg uppercase no-underline"
+		href={projectsHref}
+		data-reveal
+	>
 		{t.workAll}
-		<span class="work__all-rule" aria-hidden="true"></span>
+		<span
+			class="h-px w-[clamp(2.5rem,8vw,5rem)] origin-left bg-muted transition-[transform,background-color] duration-400 ease-expo group-hover/all:scale-x-150 group-hover/all:bg-accent group-focus-visible/all:scale-x-150 group-focus-visible/all:bg-accent"
+			aria-hidden="true"></span>
 	</a>
 </Section>
 
@@ -98,209 +135,3 @@ const projectsHref = localePath('/trabalhos', locale);
 	import { initPreviews } from '../../scripts/preview';
 	initPreviews();
 </script>
-
-<style>
-	.work {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 1px;
-		margin: clamp(2.5rem, 6vh, 4rem) 0 0;
-		padding: 0;
-		/* Same shared-background-as-rule trick as the journal grid: the 1px gap
-		   plus this background draws every seam without doubling borders. */
-		background: var(--line);
-		border-block: 1px solid var(--line);
-	}
-
-	.work__item {
-		background: var(--bg);
-	}
-
-	.work__card {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		color: inherit;
-		text-decoration: none;
-	}
-
-	/* --- Media ------------------------------------------------------------ */
-
-	.work__media {
-		position: relative;
-		aspect-ratio: 4 / 3;
-		overflow: hidden;
-		background: var(--stage, var(--bg));
-		border-bottom: 1px solid var(--line);
-	}
-
-	/* The card's art until a real recording exists: an initial on a hairline
-	   diagonal field, the same drafting-sheet vocabulary as the rest of the
-	   page rather than a generic grey box. */
-	.work__media-fallback {
-		position: absolute;
-		inset: 0;
-		display: grid;
-		place-items: center;
-		background-image: repeating-linear-gradient(
-			-45deg,
-			var(--line) 0,
-			var(--line) 1px,
-			transparent 1px,
-			transparent 12px
-		);
-	}
-
-	.work__media-fallback span {
-		font-size: clamp(2.5rem, 6vw, 3.5rem);
-		font-weight: 600;
-		letter-spacing: -0.03em;
-		color: var(--fg-muted);
-		opacity: 0.5;
-	}
-
-	.work__media-video {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	.work__media-video[hidden] {
-		display: none;
-	}
-
-	/* --- Body --------------------------------------------------------------- */
-
-	.work__body {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-		gap: 0.625rem;
-		padding: clamp(1.25rem, 2.5vw, 1.75rem);
-	}
-
-	.work__meta {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-	}
-
-	.work__year,
-	.work__action {
-		color: var(--fg-muted);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		font-variant-numeric: tabular-nums;
-	}
-
-	.work__action {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.4rem;
-		white-space: nowrap;
-	}
-
-	.work__action[data-soon] {
-		opacity: 0.6;
-	}
-
-	.work__arrow {
-		width: 11px;
-		height: 11px;
-		transition: transform 300ms var(--ease-out-expo);
-	}
-
-	.work__name {
-		margin: 0;
-		font-size: clamp(1.375rem, 1rem + 1.4vw, 1.875rem);
-		font-weight: 600;
-		line-height: 1.08;
-		letter-spacing: -0.03em;
-		transition: color 260ms var(--ease-out-expo);
-	}
-
-	.work__summary {
-		margin: 0;
-		color: var(--fg-muted);
-		font-size: 0.9375rem;
-		line-height: 1.6;
-		text-wrap: pretty;
-	}
-
-	.work__stack {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.4rem 0.5rem;
-		margin: auto 0 0;
-		padding-top: 0.375rem;
-	}
-
-	.work__stack li {
-		padding: 0.2rem 0.5rem;
-		border: 1px solid var(--line);
-		border-radius: 999px;
-		color: var(--fg-muted);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-
-	/* Hover belongs to the whole card. */
-	a.work__card:hover .work__name,
-	a.work__card:focus-visible .work__name {
-		color: var(--accent);
-	}
-
-	a.work__card:hover .work__action,
-	a.work__card:focus-visible .work__action {
-		color: var(--accent);
-	}
-
-	a.work__card:hover .work__arrow,
-	a.work__card:focus-visible .work__arrow {
-		transform: translate(2px, -2px);
-	}
-
-	/* --- All projects -------------------------------------------------------- */
-
-	.work__all {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.875rem;
-		margin-top: clamp(2rem, 5vh, 3rem);
-		color: var(--fg);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		text-decoration: none;
-	}
-
-	.work__all-rule {
-		width: clamp(2.5rem, 8vw, 5rem);
-		height: 1px;
-		background: var(--fg-muted);
-		transform-origin: left center;
-		transition:
-			transform 400ms var(--ease-out-expo),
-			background-color 260ms linear;
-	}
-
-	.work__all:hover .work__all-rule,
-	.work__all:focus-visible .work__all-rule {
-		transform: scaleX(1.5);
-		background: var(--accent);
-	}
-
-	@media (max-width: 900px) {
-		.work {
-			grid-template-columns: minmax(0, 1fr);
-		}
-	}
-</style>

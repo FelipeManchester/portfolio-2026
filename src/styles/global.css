@@ -46,6 +46,72 @@
 
   --font-sans: var(--font-general-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Fluid type ramp. Named by the role each size plays rather than by a
+     t-shirt scale, so a component asks for `text-statement` and gets the same
+     size wherever that gesture is repeated. */
+  --text-mono: var(--step-mono);
+  --text-prose: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --text-card: clamp(1.125rem, 0.95rem + 0.7vw, 1.4375rem);
+  --text-lead: clamp(1.25rem, 0.9rem + 1.4vw, 1.875rem);
+  --text-project: clamp(1.375rem, 1rem + 1.4vw, 1.875rem);
+  --text-project-lg: clamp(1.625rem, 1.2rem + 1.6vw, 2.5rem);
+  --text-about-lead: clamp(1.75rem, 1.2rem + 2.4vw, 3.25rem);
+  --text-title: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  --text-statement: clamp(2.75rem, 1.2rem + 6.5vw, 7rem);
+
+  /* The one letter-spacing used often enough to deserve a name — every mono
+     annotation on the site carries it. */
+  --tracking-mono: 0.08em;
+
+  --container-page: 1240px;
+  --container-detail: 1000px;
+
+  /* Vertical rhythm. `flow-*` are the fluid gaps between blocks inside a
+     section; `section` is the gap between sections themselves. */
+  --spacing-frame: var(--frame-inset);
+  --spacing-page-top: calc(var(--frame-inset) + 5rem);
+  --spacing-section: clamp(4.5rem, 12vh, 8.5rem);
+  --spacing-card: clamp(1.25rem, 2.5vw, 1.75rem);
+  --spacing-flow-sm: clamp(1.5rem, 3vh, 2rem);
+  --spacing-flow-md: clamp(2rem, 5vh, 3rem);
+  --spacing-flow-lg: clamp(2.5rem, 6vh, 4rem);
+  --spacing-flow-xl: clamp(3rem, 7vh, 4.5rem);
+
+  --ease-expo: var(--ease-out-expo);
+  --ease-quart: var(--ease-out-quart);
+
+  /* Shadows carry color-mix values that are painful to inline as arbitrary
+     utilities, and each is used by more than one component. */
+  --shadow-pill: 0 1px 2px color-mix(in oklab, var(--fg) 4%, transparent);
+  --shadow-pill-scrolled: 0 1px 2px color-mix(in oklab, var(--fg) 5%, transparent),
+    0 10px 30px -18px color-mix(in oklab, var(--fg) 45%, transparent);
+  --shadow-panel: 0 20px 40px -24px color-mix(in oklab, var(--fg) 50%, transparent);
+  --shadow-cta: 0 1px 2px color-mix(in oklab, var(--fg) 8%, transparent),
+    0 10px 26px -14px color-mix(in oklab, var(--fg) 55%, transparent);
+  --shadow-cta-hover: 0 1px 2px color-mix(in oklab, var(--accent) 14%, transparent),
+    0 14px 30px -14px color-mix(in oklab, var(--accent) 60%, transparent);
+
+  --animate-rule-draw: rule-draw 1200ms var(--ease-out-quart) 200ms both;
+  --animate-annotation: annotation-in 700ms var(--ease-out-expo) 900ms both;
+  --animate-grain: grain 4.8s steps(1) infinite;
+}
+
+/* The theme is an attribute on <html>, not a media query, so `dark:` has to be
+   taught where to look. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* The drafting-sheet tile used as a placeholder behind every project image.
+   A utility rather than an arbitrary background-image value because the
+   gradient is long enough that inlining it three times reads as noise. */
+@utility hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--line) 0,
+    var(--line) 1px,
+    transparent 1px,
+    transparent 12px
+  );
 }
 
 /* ---------------------------------------------------------------------------
@@ -127,6 +193,63 @@ body {
    rather than leaving it stuck at the `from` keyframe. */
 .reveal {
   animation-fill-mode: both;
+}
+
+/* ---------------------------------------------------------------------------
+   Shared keyframes
+   These back the `--animate-*` tokens above. They live here rather than in a
+   component's <style> because Astro rewrites scoped keyframe names, which
+   would leave the Tailwind utility pointing at an animation that no longer
+   exists under that name. The hero keeps its own scoped keyframes.
+--------------------------------------------------------------------------- */
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes annotation-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0 -0.2em 0);
+    opacity: 1;
+  }
+}
+
+/* Discrete jumps rather than a slide — the point is a living surface, not a
+   texture visibly panning across the screen. */
+@keyframes grain {
+  0% {
+    background-position: 0 0;
+  }
+  12.5% {
+    background-position: -34px 18px;
+  }
+  25% {
+    background-position: 22px -40px;
+  }
+  37.5% {
+    background-position: -48px -26px;
+  }
+  50% {
+    background-position: 40px 30px;
+  }
+  62.5% {
+    background-position: -18px 44px;
+  }
+  75% {
+    background-position: 36px -14px;
+  }
+  87.5% {
+    background-position: -42px 6px;
+  }
 }
 
 /* ---------------------------------------------------------------------------

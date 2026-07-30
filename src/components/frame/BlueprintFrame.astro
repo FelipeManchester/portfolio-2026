@@ -14,70 +14,18 @@ const { locale = 'pt' } = Astro.props;
   The drafting frame: local time top-left, language switch top-right. Not
   aria-hidden as a whole: it holds a real navigation landmark and a genuine
   piece of information. Only the hairline is decorative.
+
+  Click-through so the frame never steals events from the hero; the language
+  links opt back in themselves.
 */}
-<div class="frame">
-	<div class="frame__row frame__row--top">
-		<span class="frame__label"><LocalTime locale={locale} /></span>
-		<span class="frame__rule" aria-hidden="true"></span>
+<div class="pointer-events-none fixed inset-frame z-2">
+	<div class="flex items-center gap-3.5">
+		<span
+			class="animate-annotation m-0 font-mono text-mono tracking-mono whitespace-nowrap text-muted uppercase"
+		>
+			<LocalTime locale={locale} />
+		</span>
+		<span class="animate-rule-draw h-px flex-1 origin-left bg-line" aria-hidden="true"></span>
 		<LocaleSwitch locale={locale} />
 	</div>
 </div>
-
-<style>
-	.frame {
-		position: fixed;
-		inset: var(--frame-inset);
-		z-index: 2;
-		/* Click-through so the frame never steals events from the hero; the
-		   language links opt back in themselves. */
-		pointer-events: none;
-	}
-
-	.frame__row {
-		display: flex;
-		align-items: center;
-		gap: 0.875rem;
-	}
-
-	.frame__label {
-		margin: 0;
-		color: var(--fg-muted);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		white-space: nowrap;
-	}
-
-	.frame__rule {
-		flex: 1;
-		height: 1px;
-		background: var(--line);
-		transform-origin: left center;
-		animation: rule-draw 1200ms var(--ease-out-quart) 200ms both;
-	}
-
-	.frame__row--top > :not(.frame__rule) {
-		animation: annotation-in 700ms var(--ease-out-expo) 900ms both;
-	}
-
-	@keyframes rule-draw {
-		from {
-			transform: scaleX(0);
-		}
-		to {
-			transform: scaleX(1);
-		}
-	}
-
-	@keyframes annotation-in {
-		from {
-			clip-path: inset(0 0 100% 0);
-			opacity: 0;
-		}
-		to {
-			clip-path: inset(0 0 -0.2em 0);
-			opacity: 1;
-		}
-	}
-</style>

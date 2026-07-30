@@ -6,7 +6,10 @@
  */
 ---
 
-<canvas class="mesh" data-mesh aria-hidden="true"></canvas>
+<canvas
+	class="pointer-events-none fixed inset-0 z-0 block h-full w-full opacity-(--mesh-opacity) transition-opacity duration-400 ease-linear"
+	data-mesh
+	aria-hidden="true"></canvas>
 
 <script>
 	import { initPointer } from '../../scripts/pointer';
@@ -50,17 +53,3 @@
 	if (document.readyState === 'complete') whenIdle();
 	else window.addEventListener('load', whenIdle, { once: true });
 </script>
-
-<style>
-	.mesh {
-		position: fixed;
-		inset: 0;
-		z-index: 0;
-		display: block;
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-		opacity: var(--mesh-opacity);
-		transition: opacity 400ms linear;
-	}
-</style>

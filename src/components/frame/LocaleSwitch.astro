@@ -11,13 +11,21 @@ const t = copy[locale];
 const pathname = Astro.url.pathname;
 ---
 
-<nav class="locale" aria-label={t.localeLabel}>
+{/* The frame itself is click-through; these links must not be. */}
+<nav
+	class="animate-annotation pointer-events-auto inline-flex items-center gap-2"
+	aria-label={t.localeLabel}
+>
 	{
 		locales.map((code, index) => (
 			<>
-				{index > 0 && <span class="locale__divider" aria-hidden="true" />}
+				{index > 0 && <span class="h-2.75 w-px bg-line" aria-hidden="true" />}
+				{/*
+				  The active language is stated by aria-current for assistive tech and
+				  by full contrast for everyone else.
+				*/}
 				<a
-					class="locale__link"
+					class="font-mono text-mono tracking-mono text-muted no-underline transition-colors duration-180 ease-linear hover:text-fg aria-current:text-fg"
 					href={localePath(pathname, code)}
 					hreflang={code}
 					lang={code}
@@ -29,38 +37,3 @@ const pathname = Astro.url.pathname;
 		))
 	}
 </nav>
-
-<style>
-	.locale {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		/* The frame itself is click-through; these links must not be. */
-		pointer-events: auto;
-	}
-
-	.locale__link {
-		color: var(--fg-muted);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		letter-spacing: 0.08em;
-		text-decoration: none;
-		transition: color 180ms linear;
-	}
-
-	.locale__link:hover {
-		color: var(--fg);
-	}
-
-	/* The active language is stated by aria-current for assistive tech and by
-	   full contrast for everyone else. */
-	.locale__link[aria-current='true'] {
-		color: var(--fg);
-	}
-
-	.locale__divider {
-		width: 1px;
-		height: 0.6875rem;
-		background: var(--line);
-	}
-</style>

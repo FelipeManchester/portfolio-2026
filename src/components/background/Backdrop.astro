@@ -5,57 +5,19 @@
  */
 ---
 
-<div class="backdrop" aria-hidden="true">
-	<div class="backdrop__grain"></div>
+<div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+	<div
+		class="grain animate-grain absolute -inset-[60px] opacity-(--noise-opacity) mix-blend-(--noise-blend)"
+	>
+	</div>
 </div>
 
 <style>
-	.backdrop {
-		position: fixed;
-		inset: 0;
-		z-index: 0;
-		pointer-events: none;
-		overflow: hidden;
-	}
-
-	/* --- Layer 2: procedural grain -------------------------------------- */
-
-	.backdrop__grain {
-		position: absolute;
-		inset: -60px;
-		opacity: var(--noise-opacity);
-		mix-blend-mode: var(--noise-blend);
+	/* The one declaration Tailwind cannot reasonably carry: an inline SVG data
+	   URI escaped into an arbitrary background-image value would be far harder
+	   to read than the property itself. Everything else above is a utility. */
+	.grain {
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 		background-size: 180px 180px;
-		animation: grain 4.8s steps(1) infinite;
-	}
-
-	/* Discrete jumps rather than a slide — the point is a living surface,
-	   not a texture visibly panning across the screen. */
-	@keyframes grain {
-		0% {
-			background-position: 0 0;
-		}
-		12.5% {
-			background-position: -34px 18px;
-		}
-		25% {
-			background-position: 22px -40px;
-		}
-		37.5% {
-			background-position: -48px -26px;
-		}
-		50% {
-			background-position: 40px 30px;
-		}
-		62.5% {
-			background-position: -18px 44px;
-		}
-		75% {
-			background-position: 36px -14px;
-		}
-		87.5% {
-			background-position: -42px 6px;
-		}
 	}
 </style>

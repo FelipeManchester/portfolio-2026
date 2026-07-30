@@ -17,58 +17,42 @@ interface Props {
 const { id, label, lead, meta } = Astro.props;
 ---
 
-<section class="section" id={id} aria-labelledby={`${id}-label`}>
-	<header class="section__head">
-		<h2 class="section__label" id={`${id}-label`} data-reveal>{label}</h2>
-		<span class="section__rule" aria-hidden="true" data-reveal-rule></span>
-		{meta && <span class="section__meta" data-reveal>{meta}</span>}
+<section
+	class="relative z-1 mx-auto max-w-page px-frame py-section"
+	id={id}
+	aria-labelledby={`${id}-label`}
+>
+	<header class="flex items-center gap-3.5">
+		<h2
+			class="m-0 font-mono text-mono font-normal tracking-mono whitespace-nowrap text-muted uppercase"
+			id={`${id}-label`}
+			data-reveal
+		>
+			{label}
+		</h2>
+		<span class="h-px flex-1 origin-left bg-line" aria-hidden="true" data-reveal-rule></span>
+		{
+			meta && (
+				<span
+					class="m-0 font-mono text-mono font-normal tracking-mono whitespace-nowrap text-muted uppercase"
+					data-reveal
+				>
+					{meta}
+				</span>
+			)
+		}
 	</header>
 
-	{lead && <p class="section__lead" data-reveal>{lead}</p>}
+	{
+		lead && (
+			<p
+				class="mt-flow-md max-w-[46ch] text-lead leading-[1.35] tracking-[-0.02em] text-balance"
+				data-reveal
+			>
+				{lead}
+			</p>
+		)
+	}
 
 	<slot />
 </section>
-
-<style>
-	.section {
-		position: relative;
-		z-index: 1;
-		max-width: 1240px;
-		margin-inline: auto;
-		padding: clamp(4.5rem, 12vh, 8.5rem) var(--frame-inset);
-	}
-
-	.section__head {
-		display: flex;
-		align-items: center;
-		gap: 0.875rem;
-	}
-
-	.section__label,
-	.section__meta {
-		margin: 0;
-		color: var(--fg-muted);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		font-weight: 400;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		white-space: nowrap;
-	}
-
-	.section__rule {
-		flex: 1;
-		height: 1px;
-		background: var(--line);
-		transform-origin: left center;
-	}
-
-	.section__lead {
-		max-width: 46ch;
-		margin: clamp(2rem, 5vh, 3rem) 0 0;
-		font-size: clamp(1.25rem, 0.9rem + 1.4vw, 1.875rem);
-		line-height: 1.35;
-		letter-spacing: -0.02em;
-		text-wrap: balance;
-	}
-</style>

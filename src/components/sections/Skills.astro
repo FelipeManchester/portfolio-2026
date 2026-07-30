@@ -16,14 +16,20 @@ const t = copy[locale];
 	  different kinds of claim, and keeping them apart lets a recruiter scan for
 	  the one column they actually came to check.
 	*/}
-	<div class="skills">
+	<div
+		class="mt-flow-lg grid grid-cols-3 gap-[clamp(2rem,5vw,3.5rem)] border-t border-line pt-flow-md max-[860px]:grid-cols-1 max-[860px]:gap-[clamp(1.75rem,5vh,2.5rem)]"
+	>
 		{
 			skillGroups.map((group) => (
-				<div class="skills__group" data-reveal>
-					<h3 class="skills__label">{group.label[locale]}</h3>
-					<ul class="skills__list" role="list">
+				<div data-reveal>
+					<h3 class="mt-0 mb-4.5 font-mono text-mono font-normal tracking-mono text-muted uppercase">
+						{group.label[locale]}
+					</h3>
+					<ul class="m-0 flex list-none flex-wrap gap-x-2.5 gap-y-2 p-0" role="list">
 						{group.skills.map((skill) => (
-							<li>{skill}</li>
+							<li class="rounded-full border border-line px-3 py-1.5 text-[0.9375rem] tracking-[-0.006em] transition-[border-color,color] duration-220 ease-quart hover:border-[color-mix(in_oklab,var(--accent)_55%,var(--line))] hover:text-accent">
+								{skill}
+							</li>
 						))}
 					</ul>
 				</div>
@@ -31,56 +37,3 @@ const t = copy[locale];
 		}
 	</div>
 </Section>
-
-<style>
-	.skills {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: clamp(2rem, 5vw, 3.5rem);
-		margin-top: clamp(2.5rem, 6vh, 4rem);
-		padding-top: clamp(2rem, 5vh, 3rem);
-		border-top: 1px solid var(--line);
-	}
-
-	.skills__label {
-		margin: 0 0 1.125rem;
-		color: var(--fg-muted);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		font-weight: 400;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-
-	.skills__list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem 0.625rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.skills__list li {
-		padding: 0.35rem 0.75rem;
-		border: 1px solid var(--line);
-		border-radius: 999px;
-		font-size: 0.9375rem;
-		letter-spacing: -0.006em;
-		transition:
-			border-color 220ms var(--ease-out-quart),
-			color 220ms var(--ease-out-quart);
-	}
-
-	.skills__list li:hover {
-		border-color: color-mix(in oklab, var(--accent) 55%, var(--line));
-		color: var(--accent);
-	}
-
-	@media (max-width: 860px) {
-		.skills {
-			grid-template-columns: minmax(0, 1fr);
-			gap: clamp(1.75rem, 5vh, 2.5rem);
-		}
-	}
-</style>

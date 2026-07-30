@@ -14,16 +14,10 @@ const t = copy[locale];
   build, so a baked timestamp would be stale the moment it deployed. The
   monospace face means filling it in causes no reflow.
 */}
-<span class="clock" data-clock data-timezone={location.timeZone}>
+<span class="tabular-nums" data-clock data-timezone={location.timeZone}>
 	<span class="sr-only">{t.localTimeLabel}</span>
 	<span data-clock-value>--:--</span> BRT
 </span>
-
-<style>
-	.clock {
-		font-variant-numeric: tabular-nums;
-	}
-</style>
 
 <script>
 	const clock = document.querySelector<HTMLElement>('[data-clock]');

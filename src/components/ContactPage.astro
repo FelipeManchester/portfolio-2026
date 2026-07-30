@@ -21,29 +21,62 @@ const t = copy[locale];
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 
-	<section class="contact-page" id="main" aria-labelledby="contact-page-label">
-		<header class="contact-page__head">
-			<h1 class="contact-page__label" id="contact-page-label">{t.contactLabel}</h1>
-
+	<section
+		class="relative z-1 mx-auto max-w-page px-frame pt-page-top pb-section"
+		id="main"
+		aria-labelledby="contact-page-label"
+	>
+		<header class="flex items-center gap-3.5">
+			<h1
+				class="m-0 font-mono text-mono font-normal tracking-mono whitespace-nowrap text-muted uppercase"
+				id="contact-page-label"
+			>
+				{t.contactLabel}
+			</h1>
 		</header>
 
-		<p class="contact-page__headline">{t.contactHeadline}</p>
-		<p class="contact-page__body">{t.contactBody}</p>
+		<p
+			class="mt-flow-lg max-w-[14ch] text-statement leading-[0.95] font-semibold tracking-[-0.045em] text-balance"
+		>
+			{t.contactHeadline}
+		</p>
+		<p class="mt-flow-sm max-w-[44ch] leading-[1.65] text-muted text-pretty">{t.contactBody}</p>
 
-		<a class="contact-page__email" href={`mailto:${email}`}>
+		{/*
+		  The address is set larger than the section body and written out in full:
+		  a recruiter who wants to paste it into their own client should not have
+		  to hunt for it.
+		*/}
+		<a
+			class="group/mail mt-flow-lg inline-flex flex-col gap-2 font-mono text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] tracking-[-0.006em] text-fg no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
+			href={`mailto:${email}`}
+		>
 			{email}
-			<span class="contact-page__email-rule" aria-hidden="true"></span>
+			<span
+				class="h-px origin-left bg-line transition-[transform,background-color] duration-400 ease-expo group-hover/mail:scale-x-105 group-hover/mail:bg-accent group-focus-visible/mail:scale-x-105 group-focus-visible/mail:bg-accent"
+				aria-hidden="true"></span>
 		</a>
 
-		<div class="contact-page__socials">
-			<h2 class="contact-page__socials-label">{t.socialsLabel}</h2>
-			<ul class="contact-page__socials-list" role="list">
+		<div class="mt-flow-xl border-t border-line pt-flow-md">
+			<h2 class="mt-0 mb-4.5 font-mono text-mono font-normal tracking-mono text-muted uppercase">
+				{t.socialsLabel}
+			</h2>
+			<ul class="m-0 flex list-none flex-wrap gap-x-10 gap-y-3 p-0" role="list">
 				{
 					socials.map((social) => (
 						<li>
-							<a class="contact-page__social" href={social.url} target="_blank" rel="noopener">
+							<a
+								class="group/social inline-flex items-center gap-2 text-[clamp(1.25rem,1.05rem+0.8vw,1.625rem)] font-semibold tracking-[-0.02em] text-fg no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
+								href={social.url}
+								target="_blank"
+								rel="noopener"
+							>
 								{social.label}
-								<svg class="contact-page__social-arrow" viewBox="0 0 12 12" aria-hidden="true">
+								<svg
+									class="size-3.25 transition-transform duration-300 ease-expo group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5 group-focus-visible/social:translate-x-0.5 group-focus-visible/social:-translate-y-0.5"
+									viewBox="0 0 12 12"
+									aria-hidden="true"
+								>
 									<path
 										d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
 										fill="none"
@@ -71,156 +104,3 @@ const t = copy[locale];
 	initNav();
 	initMotion();
 </script>
-
-<style>
-	.contact-page {
-		position: relative;
-		z-index: 1;
-		max-width: 1240px;
-		margin-inline: auto;
-		padding: calc(var(--frame-inset) + 5rem) var(--frame-inset)
-			clamp(4.5rem, 12vh, 8.5rem);
-	}
-
-	.contact-page__head {
-		display: flex;
-		align-items: center;
-		gap: 0.875rem;
-	}
-
-	.contact-page__label,
-	.contact-page__status {
-		margin: 0;
-		color: var(--fg-muted);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		font-weight: 400;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		white-space: nowrap;
-	}
-
-	.contact-page__rule {
-		flex: 1;
-		height: 1px;
-		background: var(--line);
-	}
-
-	.contact-page__status {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.contact-page__dot {
-		width: 5px;
-		height: 5px;
-		border-radius: 999px;
-		background: var(--accent);
-	}
-
-	.contact-page__headline {
-		max-width: 14ch;
-		margin: clamp(2.5rem, 6vh, 4rem) 0 0;
-		font-size: clamp(2.75rem, 1.2rem + 6.5vw, 7rem);
-		font-weight: 600;
-		line-height: 0.95;
-		letter-spacing: -0.045em;
-		text-wrap: balance;
-	}
-
-	.contact-page__body {
-		max-width: 44ch;
-		margin: clamp(1.5rem, 3vh, 2rem) 0 0;
-		color: var(--fg-muted);
-		font-size: 1rem;
-		line-height: 1.65;
-		text-wrap: pretty;
-	}
-
-	.contact-page__email {
-		display: inline-flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		margin-top: clamp(2.5rem, 6vh, 3.5rem);
-		color: var(--fg);
-		font-family: var(--font-mono);
-		font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
-		letter-spacing: -0.006em;
-		text-decoration: none;
-		transition: color 220ms var(--ease-out-quart);
-	}
-
-	.contact-page__email-rule {
-		height: 1px;
-		background: var(--line);
-		transform-origin: left center;
-		transition:
-			transform 400ms var(--ease-out-expo),
-			background-color 260ms linear;
-	}
-
-	.contact-page__email:hover,
-	.contact-page__email:focus-visible {
-		color: var(--accent);
-	}
-
-	.contact-page__email:hover .contact-page__email-rule,
-	.contact-page__email:focus-visible .contact-page__email-rule {
-		transform: scaleX(1.05);
-		background: var(--accent);
-	}
-
-	.contact-page__socials {
-		margin-top: clamp(3rem, 7vh, 4.5rem);
-		padding-top: clamp(2rem, 5vh, 3rem);
-		border-top: 1px solid var(--line);
-	}
-
-	.contact-page__socials-label {
-		margin: 0 0 1.125rem;
-		color: var(--fg-muted);
-		font-family: var(--font-mono);
-		font-size: var(--step-mono);
-		font-weight: 400;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-
-	.contact-page__socials-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem 2.5rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.contact-page__social {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		color: var(--fg);
-		font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem);
-		font-weight: 600;
-		letter-spacing: -0.02em;
-		text-decoration: none;
-		transition: color 220ms var(--ease-out-quart);
-	}
-
-	.contact-page__social-arrow {
-		width: 13px;
-		height: 13px;
-		transition: transform 300ms var(--ease-out-expo);
-	}
-
-	.contact-page__social:hover,
-	.contact-page__social:focus-visible {
-		color: var(--accent);
-	}
-
-	.contact-page__social:hover .contact-page__social-arrow,
-	.contact-page__social:focus-visible .contact-page__social-arrow {
-		transform: translate(2px, -2px);
-	}
-</style>

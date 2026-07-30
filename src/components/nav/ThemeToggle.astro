@@ -12,46 +12,20 @@ const t = copy[locale];
 {/* Labels ride on the element so theme.ts can relabel without importing copy. */}
 <button
 	type="button"
-	class="toggle"
+	class="grid size-8 cursor-pointer place-items-center rounded-full border-0 bg-none p-0 text-muted transition-colors duration-200 ease-linear hover:text-fg"
 	data-theme-toggle
 	data-label-dark={t.themeToDark}
 	data-label-light={t.themeToLight}
 	aria-label={t.themeToDark}
 >
-	<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+	{/* A disc whose lit half rotates across — a phase, not a sun and a moon. */}
+	<svg
+		class="size-4.25 rotate-0 transition-[rotate] duration-620 ease-quart dark:rotate-180"
+		viewBox="0 0 24 24"
+		aria-hidden="true"
+		focusable="false"
+	>
 		<circle cx="12" cy="12" r="7.25" fill="none" stroke="currentColor" stroke-width="1.4"></circle>
 		<path d="M12 4.75a7.25 7.25 0 0 0 0 14.5z" fill="currentColor"></path>
 	</svg>
 </button>
-
-<style>
-	/* A disc whose lit half rotates across — a phase, not a sun and a moon. */
-	.toggle {
-		display: grid;
-		place-items: center;
-		width: 2rem;
-		height: 2rem;
-		padding: 0;
-		border: 0;
-		border-radius: 999px;
-		background: none;
-		color: var(--fg-muted);
-		cursor: pointer;
-		transition: color 200ms linear;
-	}
-
-	.toggle:hover {
-		color: var(--fg);
-	}
-
-	.toggle svg {
-		width: 1.0625rem;
-		height: 1.0625rem;
-		rotate: 0deg;
-		transition: rotate 620ms var(--ease-out-quart);
-	}
-
-	:global(html[data-theme='dark']) .toggle svg {
-		rotate: 180deg;
-	}
-</style>
