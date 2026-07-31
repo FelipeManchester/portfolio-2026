@@ -18,7 +18,7 @@ const { locale = 'pt' } = Astro.props;
   Click-through so the frame never steals events from the hero; the language
   links opt back in themselves.
 */}
-<div class="pointer-events-none fixed inset-frame z-2">
+<div class="pointer-events-none fixed inset-frame z-2" data-frame>
 	<div class="flex items-center gap-3.5">
 		<span
 			class="animate-annotation m-0 font-mono text-mono tracking-mono whitespace-nowrap text-muted uppercase"

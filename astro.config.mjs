@@ -7,6 +7,10 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 	},
+	// The page transition only plays while the browser holds the old page on
+	// screen waiting for the new one. Prefetching on hover puts the next
+	// document in cache before the click, so the swap has nothing to wait for.
+	prefetch: { prefetchAll: true },
 	i18n: {
 		defaultLocale: 'pt',
 		locales: ['pt', 'en'],

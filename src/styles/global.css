@@ -120,6 +120,11 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --dur-reveal: 1100ms;
+
+  /* Page transition. The two overlap: the incoming page starts moving before
+     the outgoing one has finished leaving. */
+  --dur-page-out: 260ms;
+  --dur-page-in: 520ms;
 }
 
 /* ---------------------------------------------------------------------------
@@ -214,24 +219,129 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Theme wipe
-   The toggle expands a circle from its own centre via the View Transitions
-   API. theme.ts sets --tx/--ty/--tr and skips this path entirely when the
-   API is missing or motion is reduced.
+   Page transitions
+   Cross-document View Transitions: an opt-in both documents share, no client
+   router and no rehydration. The nav pill and the drafting frame are named, so
+   the browser recognises them as the same element either side of the
+   navigation and holds them still — only the page body moves, which is what
+   makes the frame read as a shell rather than as part of the page. Browsers
+   without support navigate normally and lose nothing but the animation.
 --------------------------------------------------------------------------- */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* The theme wipe below is also a view transition, and it needs the whole page
+   inside a single `root` snapshot for the circle to sweep across. While it
+   runs, the shell gives its names back. */
+html:not([data-theme-wipe]) [data-nav] {
+  view-transition-name: nav;
+}
+
+html:not([data-theme-wipe]) [data-frame] {
+  view-transition-name: frame;
+}
+
+/* Present on both sides of the navigation: hold both snapshots still and let
+   the new one paint over the old. The frame's own hairline draw and the
+   clock's annotation reveal then play live on the incoming page. */
+::view-transition-old(nav),
+::view-transition-new(nav),
+::view-transition-old(frame),
+::view-transition-new(frame) {
+  animation: none;
+  mix-blend-mode: normal;
+}
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation: none;
   mix-blend-mode: normal;
 }
 
 ::view-transition-old(root) {
   z-index: 1;
+  animation: page-out var(--dur-page-out) var(--ease-out-quart) both;
 }
 
 ::view-transition-new(root) {
   z-index: 2;
+  animation: page-in var(--dur-page-in) var(--ease-out-expo) 60ms both;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+/* Enters clipped along its bottom edge and settles upward — the same
+   draw-then-settle gesture the section rules and the frame hairline use. */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    clip-path: inset(0 0 10% 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Page transitions — fallback
+   Firefox has no cross-document View Transitions, so it gets a scripted
+   crossfade: the outgoing page fades before the navigation commits, the
+   incoming one fades up on load. page-transition.ts sets both attributes and
+   only ever runs where the native path is missing.
+
+   Opacity alone, and never on <body> itself. A transform or clip-path here
+   would make the element a containing block for the fixed nav and frame and
+   drag them out of position mid-navigation.
+--------------------------------------------------------------------------- */
+
+html[data-page-fade] body > *:not([data-nav], [data-frame], [data-nav-sentinel], .skip-link) {
+  animation: page-fade-in var(--dur-page-in) var(--ease-out-quart) both;
+}
+
+html[data-page-fade][data-leaving] body > *:not([data-nav], [data-frame], [data-nav-sentinel], .skip-link) {
+  animation: page-fade-out var(--dur-page-out) var(--ease-out-quart) forwards;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes page-fade-out {
+  to {
+    opacity: 0;
+    translate: 0 -10px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Theme wipe
+   The toggle expands a circle from its own centre via the View Transitions
+   API. theme.ts sets --tx/--ty/--tr and skips this path entirely when the
+   API is missing or motion is reduced.
+
+   Scoped to the wipe's own attribute so it overrides the page-transition
+   animations above rather than competing with them.
+--------------------------------------------------------------------------- */
+
+html[data-theme-wipe]::view-transition-old(root),
+html[data-theme-wipe]::view-transition-new(root) {
+  animation: none;
 }
 
 html[data-theme-wipe]::view-transition-new(root) {
@@ -255,6 +365,14 @@ html[data-theme-wipe]::view-transition-new(root) {
 --------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
+  /* The universal selector below does not reach the view-transition pseudo
+     tree, so the page swap is disarmed by name. Both snapshots stack, the new
+     one on top, and the navigation lands instantly. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+
   *,
   *::before,
   *::after {

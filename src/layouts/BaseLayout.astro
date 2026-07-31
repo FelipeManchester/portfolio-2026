@@ -54,6 +54,17 @@ const alternates = locales.map((code) => {
 			})();
 		</script>
 
+		{/*
+		  Cross-document View Transitions animate navigations on their own; where
+		  they are missing (Firefox) a scripted crossfade stands in. Flagged here
+		  rather than from the module script so the entry animation is already in
+		  effect at first paint. `pageswap` ships alongside the cross-document
+		  support, which makes it the closest thing to a direct feature test.
+		*/}
+		<script is:inline>
+			if (!('onpageswap' in window)) document.documentElement.dataset.pageFade = '';
+		</script>
+
 		{/* Display face is the LCP element, so it preloads. The mono face is not. */}
 		<Font cssVariable="--font-general-sans" preload />
 		<Font cssVariable="--font-geist-mono" />
@@ -62,5 +73,12 @@ const alternates = locales.map((code) => {
 	<body>
 		<a class="skip-link" href="#main">{t.skip}</a>
 		<slot />
+
+		{/* Every page uses this layout, so the fallback is wired once here rather
+		    than repeated in each page's own script block. */}
+		<script>
+			import { initPageTransition } from '../scripts/page-transition';
+			initPageTransition();
+		</script>
 	</body>
 </html>
