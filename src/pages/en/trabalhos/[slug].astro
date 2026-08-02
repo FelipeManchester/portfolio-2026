@@ -1,8 +1,10 @@
 ---
 import TrabalhoDetail from '../../../components/TrabalhoDetail.astro';
-import { projects } from '../../../content/site';
+import { getProjects } from '../../../lib/storyblok';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+	const projects = await getProjects('en');
+
 	return projects.map((project) => ({
 		params: { slug: project.slug },
 		props: { project },

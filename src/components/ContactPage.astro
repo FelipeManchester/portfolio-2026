@@ -3,17 +3,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Footer from './Footer.astro';
-import { copy, email, socials, type Locale } from '../content/site';
+import { email, shared } from '../content/shared';
+import type { Locale } from '../lib/i18n';
 
 interface Props {
 	locale: Locale;
 }
 
+/** Recruiter-facing profiles, LinkedIn first. */
+const socials = [
+	{ label: 'LinkedIn', url: 'https://www.linkedin.com/in/felipemanchester' },
+	{ label: 'GitHub', url: 'https://github.com/felipemanchester' },
+];
+
+const copy: Record<Locale, { title: string; description: string; socialsLabel: string }> = {
+	en: {
+		title: 'Contact — Felipe Manchester',
+		description: 'Get in touch by email or find Felipe Manchester on LinkedIn and GitHub.',
+		socialsLabel: 'Elsewhere',
+	},
+	pt: {
+		title: 'Contato — Felipe Manchester',
+		description: 'Fale por e-mail ou encontre Felipe Manchester no LinkedIn e no GitHub.',
+		socialsLabel: 'Outros lugares',
+	},
+};
+
 const { locale } = Astro.props;
-const t = copy[locale];
+const t = { ...shared[locale], ...copy[locale] };
 ---
 
-<BaseLayout locale={locale} title={t.contactTitle} description={t.contactDescription}>
+<BaseLayout locale={locale} title={t.title} description={t.description}>
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 

@@ -1,10 +1,14 @@
 ---
-import { copy, type Locale } from '../../content/site';
-import { localePath } from '../../lib/i18n';
+import { localePath, type Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
+
+const copy: Record<Locale, { primary: string; secondary: string }> = {
+	en: { primary: 'View projects', secondary: 'Contact me' },
+	pt: { primary: 'Ver projetos', secondary: 'Fale comigo' },
+};
 
 const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
@@ -16,11 +20,11 @@ const contactHref = localePath('/contato', locale);
 
 <div class="cta reveal">
 	<a class="cta__button cta__button--primary" href={projectsHref} data-magnetic>
-		<span class="cta__label">{t.ctaPrimary}</span>
+		<span class="cta__label">{t.primary}</span>
 	</a>
 
 	<a class="cta__button cta__button--secondary" href={contactHref} data-magnetic>
-		<span class="cta__label">{t.ctaSecondary}</span>
+		<span class="cta__label">{t.secondary}</span>
 		<svg class="cta__arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
 			<path
 				d="M3 8h10M9 4l4 4-4 4"

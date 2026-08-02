@@ -1,29 +1,43 @@
 ---
 import Section from './Section.astro';
-import { copy, projects, type Locale } from '../../content/site';
-import { localePath } from '../../lib/i18n';
+import { shared } from '../../content/shared';
+import { getFeaturedProjects } from '../../lib/storyblok';
+import { localePath, type Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+const copy: Record<Locale, { lead: string; all: string; view: string }> = {
+	en: {
+		lead: 'Three builds that show the range — product, catalogue, and a site that lives or dies on search.',
+		all: 'All projects',
+		view: 'View project',
+	},
+	pt: {
+		lead: 'Três projetos que mostram a variação — produto, catálogo e um site que depende de busca orgânica.',
+		all: 'Todos os projetos',
+		view: 'Ver projeto',
+	},
+};
+
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
+const t = { ...shared[locale], ...copy[locale] };
 const projectsHref = localePath('/trabalhos', locale);
+const projects = await getFeaturedProjects(locale);
 ---
 
 <Section
 	id="work"
 	label={t.workLabel}
-	lead={t.workLead}
+	lead={t.lead}
 	meta={String(projects.length).padStart(2, '0')}
 >
 	{/*
-	  Each card looks for /projects/<slug>.mp4 and /projects/<slug>-poster.jpg —
-	  drop a short muted loop (~6-10s) and its first frame in public/projects/
-	  under those names and it plays with no code change. Until then the video's
-	  own `error` event hides it (see preview.ts) and the lettered tile behind it
-	  stays as the card's art.
+	  Every card opens the project's own detail page, never the client's site
+	  directly — the "visit site" link lives there instead, alongside the write-up.
+	  The poster is a still image here; the video only plays on the detail page,
+	  so the home page never carries autoplaying media.
 
 	  The 1px gap plus the shared background is what draws every seam — one
 	  border per cell would double up where they meet.
@@ -34,21 +48,12 @@ const projectsHref = localePath('/trabalhos', locale);
 	>
 		{
 			projects.map((project) => {
-				const Row = project.url ? 'a' : 'div';
-				const rowProps = project.url
-					? { href: project.url, target: '_blank', rel: 'noopener' }
-					: {};
-				const mediaBase = `/projects/${project.slug}`;
+				const href = localePath(`/trabalhos/${project.slug}`, locale);
 
 				return (
 					<li class="bg-bg">
-						<Row
-							class="group/card flex h-full flex-col text-inherit no-underline"
-							data-preview
-							data-reveal
-							{...rowProps}
-						>
-							<div class="relative aspect-4/3 overflow-hidden border-b border-line bg-bg">
+						<a class="group/card flex h-full flex-col text-inherit no-underline" data-reveal href={href}>
+							<div class="relative aspect-16/10 overflow-hidden border-b border-line bg-bg">
 								{/* The card's art until a real recording exists: an initial on a
 								    hairline diagonal field, the same drafting-sheet vocabulary as
 								    the rest of the page rather than a generic grey box. */}
@@ -57,17 +62,15 @@ const projectsHref = localePath('/trabalhos', locale);
 										{project.name.charAt(0)}
 									</span>
 								</div>
-								<video
-									class="absolute inset-0 h-full w-full object-cover [&[hidden]]:hidden"
-									muted
-									loop
-									playsinline
-									preload="none"
-									poster={`${mediaBase}-poster.jpg`}
-									aria-hidden="true"
-								>
-									<source src={`${mediaBase}.mp4`} type="video/mp4" />
-								</video>
+								{project.poster && (
+									<img
+										class="absolute inset-0 h-full w-full object-cover"
+										src={project.poster}
+										alt=""
+										loading="lazy"
+										decoding="async"
+									/>
+								)}
 							</div>
 
 							<div class="flex flex-1 flex-col gap-2.5 p-card">
@@ -75,25 +78,20 @@ const projectsHref = localePath('/trabalhos', locale);
 									<span class="font-mono text-mono tracking-mono text-muted uppercase tabular-nums">
 										{project.year}
 									</span>
-									<span
-										class="inline-flex items-center gap-1.5 font-mono text-mono tracking-mono whitespace-nowrap text-muted uppercase tabular-nums transition-colors duration-260 ease-expo data-soon:opacity-60 group-hover/card:text-accent group-focus-visible/card:text-accent"
-										data-soon={project.url ? undefined : ''}
-									>
-										{project.url ? t.visitSite : t.soon}
-										{project.url && (
-											<svg
-												class="size-2.75 transition-transform duration-300 ease-expo group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 group-focus-visible/card:translate-x-0.5 group-focus-visible/card:-translate-y-0.5"
-												viewBox="0 0 12 12"
-												aria-hidden="true"
-											>
-												<path
-													d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="1.2"
-												/>
-											</svg>
-										)}
+									<span class="inline-flex items-center gap-1.5 font-mono text-mono tracking-mono whitespace-nowrap text-muted uppercase tabular-nums transition-colors duration-260 ease-expo group-hover/card:text-accent group-focus-visible/card:text-accent">
+										{t.view}
+										<svg
+											class="size-2.75 transition-transform duration-300 ease-expo group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 group-focus-visible/card:translate-x-0.5 group-focus-visible/card:-translate-y-0.5"
+											viewBox="0 0 12 12"
+											aria-hidden="true"
+										>
+											<path
+												d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="1.2"
+											/>
+										</svg>
 									</span>
 								</div>
 
@@ -101,7 +99,7 @@ const projectsHref = localePath('/trabalhos', locale);
 									{project.name}
 								</h3>
 								<p class="m-0 text-[0.9375rem] leading-relaxed text-muted text-pretty">
-									{project.summary[locale]}
+									{project.summary}
 								</p>
 
 								<ul class="mt-auto flex flex-wrap gap-x-2 gap-y-1.5 pt-1.5" role="list">
@@ -112,7 +110,7 @@ const projectsHref = localePath('/trabalhos', locale);
 									))}
 								</ul>
 							</div>
-						</Row>
+						</a>
 					</li>
 				);
 			})
@@ -124,14 +122,9 @@ const projectsHref = localePath('/trabalhos', locale);
 		href={projectsHref}
 		data-reveal
 	>
-		{t.workAll}
+		{t.all}
 		<span
 			class="h-px w-[clamp(2.5rem,8vw,5rem)] origin-left bg-muted transition-[transform,background-color] duration-400 ease-expo group-hover/all:scale-x-150 group-hover/all:bg-accent group-focus-visible/all:scale-x-150 group-focus-visible/all:bg-accent"
 			aria-hidden="true"></span>
 	</a>
 </Section>
-
-<script>
-	import { initPreviews } from '../../scripts/preview';
-	initPreviews();
-</script>

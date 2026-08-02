@@ -1,9 +1,16 @@
 ---
-import { copy, type Locale } from '../../content/site';
+import type { Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
+
+// Both labels, because the button announces the theme it switches *to* and
+// theme.ts swaps between them on click.
+const copy: Record<Locale, { toDark: string; toLight: string }> = {
+	en: { toDark: 'Switch to dark theme', toLight: 'Switch to light theme' },
+	pt: { toDark: 'Mudar para tema escuro', toLight: 'Mudar para tema claro' },
+};
 
 const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
@@ -14,9 +21,9 @@ const t = copy[locale];
 	type="button"
 	class="grid size-8 cursor-pointer place-items-center rounded-full border-0 bg-none p-0 text-muted transition-colors duration-200 ease-linear hover:text-fg"
 	data-theme-toggle
-	data-label-dark={t.themeToDark}
-	data-label-light={t.themeToLight}
-	aria-label={t.themeToDark}
+	data-label-dark={t.toDark}
+	data-label-light={t.toLight}
+	aria-label={t.toDark}
 >
 	{/* A disc whose lit half rotates across — a phase, not a sun and a moon. */}
 	<svg

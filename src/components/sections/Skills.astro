@@ -1,16 +1,41 @@
 ---
 import Section from './Section.astro';
-import { copy, skillGroups, type Locale } from '../../content/site';
+import type { Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+const copy: Record<Locale, { label: string; lead: string }> = {
+	en: { label: 'Skills', lead: 'The stack behind the work above.' },
+	pt: { label: 'Habilidades', lead: 'A stack por trás do trabalho acima.' },
+};
+
+/**
+ * Technology names are not translated, only the three category headings.
+ * Pulled from the CV list rather than every tool he has touched: this is what
+ * a recruiter scanning for a stack match is looking for.
+ */
+const skillGroups: { label: Record<Locale, string>; skills: string[] }[] = [
+	{
+		label: { en: 'Front-end', pt: 'Front-end' },
+		skills: ['React', 'Next.js', 'Astro', 'TypeScript', 'JavaScript', 'Tailwind CSS', 'Sass'],
+	},
+	{
+		label: { en: 'Back-end', pt: 'Back-end' },
+		skills: ['Node.js', 'Express', 'PHP', 'REST APIs', 'GraphQL', 'MySQL', 'Firebase', 'Supabase'],
+	},
+	{
+		label: { en: 'Tools & workflow', pt: 'Ferramentas' },
+		skills: ['WordPress', 'Sanity', 'Wix', 'Git', 'Figma', 'Jest', 'CI/CD', 'Vercel', 'Netlify'],
+	},
+];
+
 const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
 ---
 
-<Section id="skills" label={t.skillsLabel} lead={t.skillsLead}>
+<Section id="skills" label={t.label} lead={t.lead}>
 	{/*
 	  Three groups, not one long list: front-end, back-end and tooling read as
 	  different kinds of claim, and keeping them apart lets a recruiter scan for

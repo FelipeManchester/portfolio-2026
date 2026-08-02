@@ -1,14 +1,27 @@
 ---
-import { copy, projects, type Locale } from '../../content/site';
-import { localePath } from '../../lib/i18n';
+import { shared } from '../../content/shared';
+import { getProjects } from '../../lib/storyblok';
+import { localePath, type Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+const copy: Record<Locale, { lead: string; view: string }> = {
+	en: {
+		lead: 'Every build worth showing, with the stack and the reasoning behind each one.',
+		view: 'View project',
+	},
+	pt: {
+		lead: 'Todos os projetos que valem a pena mostrar, com a stack e o raciocínio por trás de cada um.',
+		view: 'Ver projeto',
+	},
+};
+
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
+const t = { ...shared[locale], ...copy[locale] };
 const base = localePath('/trabalhos', locale);
+const projects = await getProjects(locale);
 ---
 
 <section
@@ -32,18 +45,17 @@ const base = localePath('/trabalhos', locale);
 	</header>
 
 	<p class="mt-flow-md max-w-[46ch] text-lead leading-[1.35] tracking-[-0.02em] text-balance">
-		{t.trabalhosLead}
+		{t.lead}
 	</p>
 
 	{/*
-	  Same /projects/<slug>.mp4 + /projects/<slug>-poster.jpg convention as the
-	  home teaser — see Work.astro. No file yet, no code change once one lands.
+	  A still, not the video — same reasoning as the home teaser (Work.astro):
+	  every card here opens the project's own page, and that is where the video
+	  autoplays.
 	*/}
 	<ul class="mt-flow-xl flex list-none flex-col border-t border-line p-0" role="list">
 		{
 			projects.map((project, index) => {
-				const mediaBase = `/projects/${project.slug}`;
-
 				return (
 					<li class="border-b border-line" data-reveal>
 						<a
@@ -51,25 +63,22 @@ const base = localePath('/trabalhos', locale);
 							href={`${base}/${project.slug}`}
 						>
 							<div
-								class="relative aspect-4/3 overflow-hidden border border-line bg-bg transition-colors duration-260 ease-expo group-hover/card:border-accent group-focus-visible/card:border-accent"
-								data-preview
+								class="relative aspect-16/10 overflow-hidden border border-line bg-bg transition-colors duration-260 ease-expo group-hover/card:border-accent group-focus-visible/card:border-accent"
 							>
 								<div class="hatch absolute inset-0 grid place-items-center" aria-hidden="true">
 									<span class="text-[clamp(2rem,5vw,3rem)] font-semibold tracking-[-0.03em] text-muted opacity-50">
 										{project.name.charAt(0)}
 									</span>
 								</div>
-								<video
-									class="absolute inset-0 h-full w-full object-cover [&[hidden]]:hidden"
-									muted
-									loop
-									playsinline
-									preload="none"
-									poster={`${mediaBase}-poster.jpg`}
-									aria-hidden="true"
-								>
-									<source src={`${mediaBase}.mp4`} type="video/mp4" />
-								</video>
+								{project.poster && (
+									<img
+										class="absolute inset-0 h-full w-full object-cover"
+										src={project.poster}
+										alt=""
+										loading="lazy"
+										decoding="async"
+									/>
+								)}
 							</div>
 
 							<div class="flex flex-col gap-3">
@@ -86,7 +95,7 @@ const base = localePath('/trabalhos', locale);
 									{project.name}
 								</h2>
 								<p class="m-0 max-w-[52ch] leading-relaxed text-muted text-pretty">
-									{project.summary[locale]}
+									{project.summary}
 								</p>
 
 								<ul class="mt-1 flex list-none flex-wrap gap-x-2 gap-y-1.5 p-0" role="list">
@@ -98,7 +107,7 @@ const base = localePath('/trabalhos', locale);
 								</ul>
 
 								<span class="mt-2 inline-flex items-center gap-2 font-mono text-mono tracking-mono text-fg uppercase transition-colors duration-260 ease-expo group-hover/card:text-accent group-focus-visible/card:text-accent">
-									{t.viewProject}
+									{t.view}
 									<svg
 										class="size-2.75 transition-transform duration-300 ease-expo group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 group-focus-visible/card:translate-x-0.5 group-focus-visible/card:-translate-y-0.5"
 										viewBox="0 0 12 12"
@@ -120,8 +129,3 @@ const base = localePath('/trabalhos', locale);
 		}
 	</ul>
 </section>
-
-<script>
-	import { initPreviews } from '../../scripts/preview';
-	initPreviews();
-</script>

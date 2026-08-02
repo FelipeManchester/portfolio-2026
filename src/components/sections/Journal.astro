@@ -1,16 +1,25 @@
 ---
 import Section from './Section.astro';
-import { copy, posts, type Locale } from '../../content/site';
-import { localePath } from '../../lib/i18n';
+import { shared } from '../../content/shared';
+import { getPosts } from '../../lib/storyblok';
+import { localePath, type Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+const lead: Record<Locale, string> = {
+	en: 'Notes on performance, Astro and building interfaces that hold up.',
+	pt: 'Notas sobre performance, Astro e interfaces que se sustentam.',
+};
+
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
+const t = shared[locale];
 
 const blogBase = localePath('/blog', locale);
+
+// Three across the row on the homepage; /blog carries the rest.
+const posts = (await getPosts(locale)).slice(0, 3);
 
 // Formatted on the server: the date is the same for every visitor, so there is
 // no reason to ship Intl work to the browser for it.
@@ -24,7 +33,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 <Section
 	id="journal"
 	label={t.journalLabel}
-	lead={t.journalLead}
+	lead={lead[locale]}
 	meta={String(posts.length).padStart(2, '0')}
 >
 	{/*
@@ -50,7 +59,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 						</div>
 
 						<h3 class="m-0 text-card leading-[1.22] font-semibold tracking-[-0.022em] text-balance transition-colors duration-260 ease-expo group-hover/post:text-accent group-focus-visible/post:text-accent">
-							{post.title[locale]}
+							{post.title}
 						</h3>
 
 						{/* Pushed to the bottom of the cell so the three cells share a

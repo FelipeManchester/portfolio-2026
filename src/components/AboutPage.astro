@@ -5,17 +5,37 @@ import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Skills from './sections/Skills.astro';
 import Contact from './sections/Contact.astro';
 import Footer from './Footer.astro';
-import { copy, location, type Locale } from '../content/site';
+import { location, shared } from '../content/shared';
+import type { Locale } from '../lib/i18n';
 
 interface Props {
 	locale: Locale;
 }
 
+const copy: Record<Locale, { title: string; description: string; where: string; intro: string }> = {
+	en: {
+		title: 'About — Felipe Manchester',
+		description: 'Full-stack developer based in Brazil, working across React, Next.js and Astro.',
+		where: 'Based in',
+		// Placeholder copy — meant to be rewritten.
+		intro:
+			'Most of what I do is invisible when it works: pages that load before anyone notices, layouts that hold up on the fifth screen size, code the next person can actually read. I like working close to the design, not just implementing it.',
+	},
+	pt: {
+		title: 'Sobre — Felipe Manchester',
+		description:
+			'Desenvolvedor full-stack no Brasil, trabalhando com React, Next.js e Astro.',
+		where: 'Baseado em',
+		intro:
+			'A maior parte do que eu faço é invisível quando funciona: páginas que carregam antes de alguém notar, layouts que se sustentam na quinta tela diferente, código que a próxima pessoa consegue ler de fato. Gosto de trabalhar perto do design, não só implementá-lo.',
+	},
+};
+
 const { locale } = Astro.props;
-const t = copy[locale];
+const t = { ...shared[locale], ...copy[locale] };
 ---
 
-<BaseLayout locale={locale} title={t.aboutTitle} description={t.aboutDescription}>
+<BaseLayout locale={locale} title={t.title} description={t.description}>
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 
@@ -37,7 +57,7 @@ const t = copy[locale];
 			<span
 				class="m-0 font-mono text-mono font-normal tracking-mono whitespace-nowrap text-muted uppercase"
 			>
-				{t.locationLabel} — {location.label}
+				{t.where} — {location.label}
 			</span>
 		</header>
 
@@ -47,7 +67,7 @@ const t = copy[locale];
 			{t.aboutBody}
 		</p>
 		<p class="mt-flow-sm max-w-[54ch] text-prose leading-[1.65] text-muted text-pretty">
-			{t.aboutIntro}
+			{t.intro}
 		</p>
 	</section>
 

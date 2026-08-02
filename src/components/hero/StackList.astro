@@ -1,17 +1,31 @@
 ---
-import { copy, stack, type Locale } from '../../content/site';
+import type { Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+/** The real stack, taken from his CV — not the aspirational version. */
+const stack = [
+	'React',
+	'Next.js',
+	'TypeScript',
+	'Astro',
+	'Node.js',
+	'Tailwind',
+	'Supabase',
+	'PostgreSQL',
+];
+
+/** The list is visual; this heading exists only to name it for a screen reader. */
+const label: Record<Locale, string> = { en: 'Technologies', pt: 'Tecnologias' };
+
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
 ---
 
 {/* Technical annotations, not badges — deliberately quiet. */}
 <div class="stack">
-	<h2 class="sr-only">{t.stackLabel}</h2>
+	<h2 class="sr-only">{label[locale]}</h2>
 	<ul class="stack__list">
 		{
 			stack.map((item, index) => (

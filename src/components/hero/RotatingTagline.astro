@@ -1,9 +1,43 @@
 ---
-import { copy, type Locale } from '../../content/site';
+import type { Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
+
+/**
+ * `taglines` rotate visually; `staticLine` is the single sentence assistive
+ * tech gets instead, so a screen reader is not read eight variations of the
+ * same claim. Any number of lines works — the rotator counts them at runtime.
+ */
+const copy: Record<Locale, { staticLine: string; taglines: string[] }> = {
+	en: {
+		staticLine: 'Full-stack developer building digital products.',
+		taglines: [
+			'Building scalable web applications.',
+			'Creating modern and responsive interfaces.',
+			'Turning ideas into digital products.',
+			'From prototype to production.',
+			'Performance and SEO by design.',
+			'Clean code. Thoughtful architecture.',
+			'Crafting intuitive user experiences.',
+			'Focused on quality and maintainability.',
+		],
+	},
+	pt: {
+		staticLine: 'Desenvolvedor full-stack construindo produtos digitais.',
+		taglines: [
+			'Construindo produtos digitais.',
+			'Criando interfaces modernas.',
+			'Desenvolvimento focado em performance.',
+			'Da ideia à produção.',
+			'Código limpo e escalável.',
+			'Experiências web intuitivas.',
+			'Performance, acessibilidade e SEO.',
+			'Soluções para web moderna.',
+		],
+	},
+};
 
 const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
@@ -11,7 +45,7 @@ const t = copy[locale];
 
 <div class="tagline reveal">
 	{/* One stable sentence for assistive tech; the rotator is decorative. */}
-	<p class="sr-only">{t.taglineStatic}</p>
+	<p class="sr-only">{t.staticLine}</p>
 
 	<div class="tagline__window" data-tagline aria-hidden="true">
 		{

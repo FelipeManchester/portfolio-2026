@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from './nav/Nav.astro';
+import BlueprintFrame from './frame/BlueprintFrame.astro';
+import Footer from './Footer.astro';
+import { shared } from '../content/shared';
+import type { Post } from '../lib/storyblok';
+import { localePath, type Locale } from '../lib/i18n';
+
+interface Props {
+	locale: Locale;
+	post: Post;
+}
+
+const { locale, post } = Astro.props;
+const t = shared[locale];
+const base = localePath('/blog', locale);
+const title = `${post.title} — ${t.blogTitle}`;
+
+// Same server-side formatting as the list: one date, identical for everyone.
+const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', {
+	day: '2-digit',
+	month: 'short',
+	year: 'numeric',
+});
+---
+
+<BaseLayout locale={locale} title={title} description={post.excerpt}>
+	<BlueprintFrame locale={locale} />
+	<Nav locale={locale} />
+
+	<article
+		class="relative z-1 mx-auto max-w-detail px-frame pt-page-top pb-section"
+		id="main"
+		aria-labelledby="post-title"
+	>
+		<a
+			class="group/back inline-flex items-center gap-2 font-mono text-mono tracking-mono text-muted uppercase no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
+			href={base}
+			data-reveal
+		>
+			<svg
+				class="size-2.5 rotate-225 transition-transform duration-260 ease-quart group-hover/back:-translate-x-0.5 group-hover/back:translate-y-0.5 group-focus-visible/back:-translate-x-0.5 group-focus-visible/back:translate-y-0.5"
+				viewBox="0 0 12 12"
+				aria-hidden="true"
+			>
+				<path d="M9.5 2.5 2.5 9.5M8 9.5H2.5V4" fill="none" stroke="currentColor" stroke-width="1.2"
+				></path>
+			</svg>
+			{t.journalAll}
+		</a>
+
+		<header class="mt-flow-md" data-reveal>
+			<div
+				class="flex items-center gap-3 font-mono text-mono tracking-mono text-muted uppercase tabular-nums"
+			>
+				<time datetime={post.date}>{dateFormat.format(new Date(post.date))}</time>
+				<span class="text-accent">{post.tag}</span>
+				<span>{post.minutes} {t.readTime}</span>
+			</div>
+
+			<h1
+				class="mt-3 mb-0 max-w-[24ch] text-title leading-[1.06] font-semibold tracking-[-0.035em] text-balance"
+				id="post-title"
+			>
+				{post.title}
+			</h1>
+
+			<p class="mt-flow-md max-w-[52ch] text-lead leading-[1.35] tracking-[-0.02em] text-muted">
+				{post.excerpt}
+			</p>
+		</header>
+
+		{/*
+		  The body is HTML from Storyblok's richtext renderer, so it carries no
+		  classes of its own — the `article` utility in global.css is what styles
+		  the elements inside it.
+		*/}
+		<div class="article mt-flow-lg max-w-[62ch]" data-reveal set:html={post.body} />
+	</article>
+
+	<Footer locale={locale} />
+</BaseLayout>
+
+<script>
+	import { initNav } from '../scripts/nav';
+	import { initTheme } from '../scripts/theme';
+	import { initMagnetic } from '../scripts/magnetic';
+	import { initMotion } from '../scripts/motion';
+
+	initTheme();
+	initNav();
+	initMagnetic();
+	initMotion();
+</script>

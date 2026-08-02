@@ -1,12 +1,15 @@
 ---
-import { copy, type Locale } from '../../content/site';
+import { shared } from '../../content/shared';
+import type { Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+// Deliberately the same two strings the /sobre page opens with — the hero folds
+// the about section in, it does not paraphrase it.
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
+const t = shared[locale];
 ---
 
 <section class="about" id="about" aria-labelledby="about-label">

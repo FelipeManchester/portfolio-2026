@@ -1,4 +1,7 @@
-import type { Locale } from '../content/site';
+export type Locale = 'en' | 'pt';
+
+/** Primary locale first — drives switcher order and the hreflang x-default. */
+export const locales = ['pt', 'en'] as const satisfies readonly Locale[];
 
 /** Portuguese is the primary version and served from the root; English sits under /en. */
 const PREFIX: Record<Locale, string> = { pt: '', en: '/en' };

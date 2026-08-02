@@ -1,7 +1,6 @@
 ---
 import { Font } from 'astro:assets';
-import { copy, locales, type Locale } from '../content/site';
-import { localePath } from '../lib/i18n';
+import { localePath, locales, type Locale } from '../lib/i18n';
 import '../styles/global.css';
 
 interface Props {
@@ -10,8 +9,13 @@ interface Props {
 	locale?: Locale;
 }
 
+/** The only string this layout owns: the first thing a keyboard user reaches. */
+const skip: Record<Locale, string> = {
+	en: 'Skip to content',
+	pt: 'Pular para o conteúdo',
+};
+
 const { title, description, locale = 'en' } = Astro.props;
-const t = copy[locale];
 
 // Pairs the two language versions of whatever page this is. Absolute URLs are
 // preferred for hreflang, but only once `site` is set in astro.config.mjs —
@@ -71,7 +75,7 @@ const alternates = locales.map((code) => {
 	</head>
 
 	<body>
-		<a class="skip-link" href="#main">{t.skip}</a>
+		<a class="skip-link" href="#main">{skip[locale]}</a>
 		<slot />
 
 		{/* Every page uses this layout, so the fallback is wired once here rather

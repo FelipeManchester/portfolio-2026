@@ -1,12 +1,15 @@
 ---
-import { copy, location, type Locale } from '../../content/site';
+import { location } from '../../content/shared';
+import type { Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+/** Screen-reader-only: the clock reads as bare digits without it. */
+const label: Record<Locale, string> = { en: 'Local time', pt: 'Horário local' };
+
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
 ---
 
 {/*
@@ -15,7 +18,7 @@ const t = copy[locale];
   monospace face means filling it in causes no reflow.
 */}
 <span class="tabular-nums" data-clock data-timezone={location.timeZone}>
-	<span class="sr-only">{t.localTimeLabel}</span>
+	<span class="sr-only">{label[locale]}</span>
 	<span data-clock-value>--:--</span> BRT
 </span>
 

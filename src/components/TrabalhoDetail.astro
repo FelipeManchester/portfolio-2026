@@ -3,24 +3,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Footer from './Footer.astro';
-import { copy, projects, type Locale } from '../content/site';
-import { localePath } from '../lib/i18n';
-
-type Project = (typeof projects)[number];
+import { shared } from '../content/shared';
+import type { Project } from '../lib/storyblok';
+import { localePath, type Locale } from '../lib/i18n';
 
 interface Props {
 	locale: Locale;
 	project: Project;
 }
 
+/** The way back to the register this project was opened from. */
+const back: Record<Locale, string> = { en: 'All work', pt: 'Todos os trabalhos' };
+
 const { locale, project } = Astro.props;
-const t = copy[locale];
+const t = shared[locale];
 const base = localePath('/trabalhos', locale);
-const mediaBase = `/projects/${project.slug}`;
 const title = `${project.name} — ${t.trabalhosTitle}`;
 ---
 
-<BaseLayout locale={locale} title={title} description={project.summary[locale]}>
+<BaseLayout locale={locale} title={title} description={project.summary}>
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 
@@ -42,7 +43,7 @@ const title = `${project.name} — ${t.trabalhosTitle}`;
 				<path d="M9.5 2.5 2.5 9.5M8 9.5H2.5V4" fill="none" stroke="currentColor" stroke-width="1.2"
 				></path>
 			</svg>
-			{t.trabalhosBack}
+			{back[locale]}
 		</a>
 
 		<header class="mt-flow-md" data-reveal>
@@ -95,11 +96,7 @@ const title = `${project.name} — ${t.trabalhosTitle}`;
 			</ul>
 		</header>
 
-		<div
-			class="relative mt-flow-lg aspect-16/10 overflow-hidden border border-line bg-bg"
-			data-preview
-			data-reveal
-		>
+		<div class="relative mt-flow-lg aspect-16/10 overflow-hidden border border-line bg-bg" data-reveal>
 			<div class="hatch absolute inset-0 grid place-items-center" aria-hidden="true">
 				<span
 					class="text-[clamp(3rem,8vw,5rem)] font-semibold tracking-[-0.03em] text-muted opacity-50"
@@ -107,21 +104,26 @@ const title = `${project.name} — ${t.trabalhosTitle}`;
 					{project.name.charAt(0)}
 				</span>
 			</div>
-			<video
-				class="absolute inset-0 h-full w-full object-cover [&[hidden]]:hidden"
-				muted
-				loop
-				playsinline
-				preload="none"
-				poster={`${mediaBase}-poster.jpg`}
-				aria-hidden="true"
-			>
-				<source src={`${mediaBase}.mp4`} type="video/mp4" />
-			</video>
+			{
+				(project.poster || project.video) && (
+					<video
+						class="absolute inset-0 h-full w-full object-cover [&[hidden]]:hidden"
+						autoplay
+						muted
+						loop
+						playsinline
+						preload="auto"
+						poster={project.poster ?? undefined}
+						aria-hidden="true"
+					>
+						{project.video && <source src={project.video} type="video/mp4" />}
+					</video>
+				)
+			}
 		</div>
 
 		<p class="mt-flow-lg max-w-[62ch] text-prose leading-[1.65] text-muted text-pretty" data-reveal>
-			{project.description[locale]}
+			{project.description}
 		</p>
 	</section>
 
@@ -133,11 +135,9 @@ const title = `${project.name} — ${t.trabalhosTitle}`;
 	import { initTheme } from '../scripts/theme';
 	import { initMagnetic } from '../scripts/magnetic';
 	import { initMotion } from '../scripts/motion';
-	import { initPreviews } from '../scripts/preview';
 
 	initTheme();
 	initNav();
 	initMagnetic();
-	initPreviews();
 	initMotion();
 </script>

@@ -3,23 +3,46 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Footer from './Footer.astro';
-import { copy, posts, type Locale } from '../content/site';
-import { localePath } from '../lib/i18n';
+import { shared } from '../content/shared';
+import { getPosts } from '../lib/storyblok';
+import { localePath, type Locale } from '../lib/i18n';
 
 interface Props {
 	locale: Locale;
 }
 
+const copy: Record<
+	Locale,
+	{ description: string; lead: string; filterLabel: string; allTag: string; empty: string }
+> = {
+	en: {
+		description:
+			'Notes on performance, Astro, accessibility and building interfaces that hold up.',
+		lead: 'Notes on performance, Astro and building interfaces that hold up.',
+		filterLabel: 'Filter by tag',
+		allTag: 'All',
+		empty: 'Nothing under this tag yet.',
+	},
+	pt: {
+		description:
+			'Notas sobre performance, Astro, acessibilidade e construção de interfaces que se sustentam.',
+		lead: 'Notas sobre performance, Astro e interfaces que se sustentam.',
+		filterLabel: 'Filtrar por tag',
+		allTag: 'Todos',
+		empty: 'Nada sob esta tag ainda.',
+	},
+};
+
 const { locale } = Astro.props;
-const t = copy[locale];
+const t = { ...shared[locale], ...copy[locale] };
 const base = localePath('/blog', locale);
 
-// Newest first regardless of the order they are authored in.
-const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date));
+// Already newest first out of the data layer.
+const posts = await getPosts(locale);
 
 // Tags are technology and topic names, so they are not translated — the same
 // call the skills register makes.
-const tags = [...new Set(sorted.map((post) => post.tag))];
+const tags = [...new Set(posts.map((post) => post.tag))];
 
 // Formatted on the server: the date is the same for every visitor, so there is
 // no reason to ship Intl work to the browser for it.
@@ -30,7 +53,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 });
 ---
 
-<BaseLayout locale={locale} title={t.blogTitle} description={t.blogDescription}>
+<BaseLayout locale={locale} title={t.blogTitle} description={t.description}>
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 
@@ -50,12 +73,12 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 			<span
 				class="m-0 font-mono text-mono tracking-mono whitespace-nowrap text-muted uppercase tabular-nums"
 			>
-				{String(sorted.length).padStart(2, '0')}
+				{String(posts.length).padStart(2, '0')}
 			</span>
 		</header>
 
 		<p class="mt-flow-md max-w-[46ch] text-lead leading-[1.35] tracking-[-0.02em] text-balance">
-			{t.blogLead}
+			{t.lead}
 		</p>
 
 		{/*
@@ -66,7 +89,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 			class="mt-flow-md flex flex-wrap items-center gap-x-2 gap-y-2"
 			data-filter
 			role="group"
-			aria-label={t.blogFilterLabel}
+			aria-label={t.filterLabel}
 			hidden
 		>
 			<button
@@ -75,7 +98,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 				data-filter-tag="*"
 				aria-pressed="true"
 			>
-				{t.blogAllTag}
+				{t.allTag}
 			</button>
 			{
 				tags.map((tag) => (
@@ -93,7 +116,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 
 		<ul class="mt-flow-lg flex list-none flex-col border-t border-line p-0" role="list">
 			{
-				sorted.map((post) => (
+				posts.map((post) => (
 					<li class="border-b border-line" data-post={post.tag} data-reveal>
 						<a
 							class="group/post grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-8 gap-y-3 py-[clamp(1.5rem,3.5vh,2.25rem)] text-inherit no-underline max-[720px]:grid-cols-1"
@@ -106,7 +129,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 								</div>
 
 								<h2 class="m-0 max-w-[28ch] text-project leading-[1.12] font-semibold tracking-[-0.03em] text-balance transition-colors duration-260 ease-expo group-hover/post:text-accent group-focus-visible/post:text-accent">
-									{post.title[locale]}
+									{post.title}
 								</h2>
 							</div>
 
@@ -131,7 +154,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 			}
 		</ul>
 
-		<p class="mt-flow-md text-muted" data-filter-empty hidden>{t.blogEmpty}</p>
+		<p class="mt-flow-md text-muted" data-filter-empty hidden>{t.empty}</p>
 	</section>
 
 	<Footer locale={locale} />

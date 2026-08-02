@@ -4,17 +4,27 @@ import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import TrabalhosList from './sections/TrabalhosList.astro';
 import Footer from './Footer.astro';
-import { copy, type Locale } from '../content/site';
+import { shared } from '../content/shared';
+import type { Locale } from '../lib/i18n';
 
 interface Props {
 	locale: Locale;
 }
 
+/** Only the meta description is page-specific; the title also suffixes each project. */
+const description: Record<Locale, string> = {
+	en: 'Every build worth showing — product, catalogue and marketing sites, with the stack and the reasoning behind each.',
+	pt: 'Todos os projetos que valem a pena mostrar — produto, catálogo e sites institucionais, com a stack e o raciocínio por trás de cada um.',
+};
+
 const { locale } = Astro.props;
-const t = copy[locale];
 ---
 
-<BaseLayout locale={locale} title={t.trabalhosTitle} description={t.trabalhosDescription}>
+<BaseLayout
+	locale={locale}
+	title={shared[locale].trabalhosTitle}
+	description={description[locale]}
+>
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 	<TrabalhosList locale={locale} />

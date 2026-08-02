@@ -1,13 +1,21 @@
 ---
-import { copy, email, availableForWork, type Locale } from '../../content/site';
-import { localePath } from '../../lib/i18n';
+import { email, shared } from '../../content/shared';
+import { localePath, type Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+/** Flip to false the day he signs somewhere — the status pill reads from this. */
+const availableForWork = true;
+
+const copy: Record<Locale, { available: string; cta: string }> = {
+	en: { available: 'Available for work', cta: 'Send a message' },
+	pt: { available: 'Disponível para trabalho', cta: 'Enviar mensagem' },
+};
+
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
+const t = { ...shared[locale], ...copy[locale] };
 const contactHref = localePath('/contato', locale);
 ---
 
@@ -62,7 +70,7 @@ const contactHref = localePath('/contato', locale);
 		<a
 			class="inline-flex [translate:var(--mx,0)_var(--my,0)] items-center rounded-full bg-fg px-6 py-3.5 font-medium tracking-[-0.008em] whitespace-nowrap text-bg no-underline shadow-cta transition-[background-color,color,box-shadow] duration-220 ease-quart hover:bg-accent hover:text-white hover:shadow-cta-hover"
 			href={contactHref}
-			data-magnetic>{t.contactCta}</a
+			data-magnetic>{t.cta}</a
 		>
 
 		<a

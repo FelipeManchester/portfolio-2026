@@ -1,9 +1,14 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+	// The deployed origin. Everything that needs an absolute URL derives from
+	// this one value — hreflang tags, the sitemap, and social preview images
+	// later — so pointing the site at a custom domain is a one-line change here.
+	site: 'https://portfolio-2026-one-murex.vercel.app',
 	vite: {
 		plugins: [tailwindcss()],
 	},
@@ -18,6 +23,17 @@ export default defineConfig({
 		// under /en.
 		routing: { prefixDefaultLocale: false },
 	},
+	integrations: [
+		// The locale map is repeated here rather than shared with the block above
+		// because the sitemap wants BCP 47 tags — `pt-BR` names the actual variant
+		// being written, while the routing segment stays the shorter `pt`.
+		sitemap({
+			i18n: {
+				defaultLocale: 'pt',
+				locales: { pt: 'pt-BR', en: 'en' },
+			},
+		}),
+	],
 	fonts: [
 		{
 			provider: fontProviders.fontshare(),

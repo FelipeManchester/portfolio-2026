@@ -5,23 +5,31 @@ import CtaGroup from './CtaGroup.astro';
 import StackList from './StackList.astro';
 import ScrollIndicator from './ScrollIndicator.astro';
 import { splitChars } from '../../lib/split';
-import { copy, type Locale } from '../../content/site';
+import type { Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+/**
+ * The name, one array entry per rendered line. Not translated — it is a name —
+ * but kept per line because the animation staggers each one separately, and
+ * `nameAccessible` exists so the split-up characters are never announced
+ * letter by letter.
+ */
+const nameLines = ['Felipe', 'Manchester'];
+const nameAccessible = 'Felipe Manchester';
+
 const { locale = 'pt' } = Astro.props;
-const t = copy[locale];
 
 // Split on the server: the browser receives finished markup, so the <h1> is
 // paintable as the LCP element with no JavaScript involved.
-const lines = t.nameLines.map((line, index) => {
+const lines = nameLines.map((line, index) => {
 	const chars = splitChars(line);
 	// The accent full stop closes the last line. It is decorative punctuation,
 	// not part of the name — the <h1>'s aria-label already carries the name, so
 	// it is never announced.
-	const stop = index === t.nameLines.length - 1;
+	const stop = index === nameLines.length - 1;
 	return {
 		chars,
 		stop,
@@ -35,7 +43,7 @@ const lines = t.nameLines.map((line, index) => {
 
 <section class="hero" id="main">
 	<div class="hero__block">
-		<h1 class="name" aria-label={t.nameAccessible}>
+		<h1 class="name" aria-label={nameAccessible}>
 			{
 				lines.map(({ chars, stop, delay, total }) => (
 					<span class="name__line" style={`--delay:${delay}ms; --n:${total}`}>

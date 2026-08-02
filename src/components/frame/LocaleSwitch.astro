@@ -1,20 +1,21 @@
 ---
-import { copy, locales, type Locale } from '../../content/site';
-import { localePath } from '../../lib/i18n';
+import { localePath, locales, type Locale } from '../../lib/i18n';
 
 interface Props {
 	locale: Locale;
 }
 
+/** Names the pair of links; the links themselves are just PT and EN. */
+const label: Record<Locale, string> = { en: 'Language', pt: 'Idioma' };
+
 const { locale } = Astro.props;
-const t = copy[locale];
 const pathname = Astro.url.pathname;
 ---
 
 {/* The frame itself is click-through; these links must not be. */}
 <nav
 	class="animate-annotation pointer-events-auto inline-flex items-center gap-2"
-	aria-label={t.localeLabel}
+	aria-label={label[locale]}
 >
 	{
 		locales.map((code, index) => (

@@ -104,6 +104,118 @@
   );
 }
 
+/* Blog post bodies. The HTML comes out of Storyblok's richtext renderer with
+   no classes on it, so every element is styled from the parent instead — the
+   one place on the site where a descendant selector beats a utility. */
+@utility article {
+  color: var(--muted);
+  font-size: var(--text-prose);
+  line-height: 1.65;
+  text-wrap: pretty;
+
+  & > * + * {
+    margin-top: 1.25em;
+  }
+
+  & h2,
+  & h3 {
+    color: var(--fg);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  & h2 {
+    font-size: 1.5em;
+    margin-top: 2em;
+  }
+
+  & h3 {
+    font-size: 1.2em;
+    margin-top: 1.75em;
+  }
+
+  & a {
+    color: var(--fg);
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition:
+      color 220ms var(--ease-out-quart),
+      text-decoration-color 220ms var(--ease-out-quart);
+  }
+
+  & a:hover,
+  & a:focus-visible {
+    color: var(--accent);
+    text-decoration-color: currentColor;
+  }
+
+  & strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  & ul,
+  & ol {
+    padding-left: 1.25em;
+  }
+
+  & ul {
+    list-style: disc;
+  }
+
+  & ol {
+    list-style: decimal;
+  }
+
+  & li + li {
+    margin-top: 0.4em;
+  }
+
+  & blockquote {
+    border-left: 1px solid var(--line);
+    color: var(--fg);
+    padding-left: 1.25em;
+  }
+
+  & code {
+    background-color: color-mix(in oklab, var(--line) 45%, transparent);
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+    padding: 0.15em 0.35em;
+  }
+
+  /* A code block sets its own type; the inline treatment above would give it a
+     background inside a background. */
+  & pre {
+    border: 1px solid var(--line);
+    font-size: 0.875em;
+    line-height: 1.6;
+    overflow-x: auto;
+    padding: 1.1em 1.25em;
+  }
+
+  & pre code {
+    background: none;
+    font-size: inherit;
+    padding: 0;
+  }
+
+  & img {
+    border: 1px solid var(--line);
+    height: auto;
+    max-width: 100%;
+  }
+
+  & hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin-block: 2.5em;
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Scale & motion
 --------------------------------------------------------------------------- */

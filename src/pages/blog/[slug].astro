@@ -1,0 +1,17 @@
+---
+import PostDetail from '../../components/PostDetail.astro';
+import { getPosts } from '../../lib/storyblok';
+
+export async function getStaticPaths() {
+	const posts = await getPosts('pt');
+
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+---
+
+<PostDetail locale="pt" post={post} />

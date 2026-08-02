@@ -7,11 +7,25 @@ import Work from './sections/Work.astro';
 import Skills from './sections/Skills.astro';
 import Journal from './sections/Journal.astro';
 import Footer from './Footer.astro';
-import { copy, type Locale } from '../content/site';
+import type { Locale } from '../lib/i18n';
 
 interface Props {
 	locale: Locale;
 }
+
+/** The site's own title and meta description — the home page is the site root. */
+const copy: Record<Locale, { title: string; description: string }> = {
+	en: {
+		title: 'Felipe Manchester — Full-stack developer',
+		description:
+			'Full-stack developer building fast, accessible web products with React, Next.js, Astro and TypeScript.',
+	},
+	pt: {
+		title: 'Felipe Manchester — Desenvolvedor full-stack',
+		description:
+			'Desenvolvedor full-stack criando produtos web rápidos e acessíveis com React, Next.js, Astro e TypeScript.',
+	},
+};
 
 const { locale } = Astro.props;
 const t = copy[locale];

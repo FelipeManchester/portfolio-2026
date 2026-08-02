@@ -1,18 +1,48 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
-import { copy, type Locale } from '../../content/site';
-import { localePath } from '../../lib/i18n';
+import { localePath, type Locale } from '../../lib/i18n';
 
 interface Props {
 	locale?: Locale;
 }
 
+/**
+ * The menu itself. Hrefs are authored locale-neutral — the pt routes, since
+ * those are the ones served from the root — and prefixed below, so a Portuguese
+ * visitor never gets dropped onto an English route. Order differs between the
+ * two languages on purpose; it is what each version was written with.
+ */
+const copy: Record<Locale, { navLabel: string; menuOpen: string; menuClose: string; nav: { label: string; href: string }[] }> = {
+	en: {
+		navLabel: 'Main',
+		menuOpen: 'Open menu',
+		menuClose: 'Close menu',
+		nav: [
+			{ label: 'Home', href: '/' },
+			{ label: 'Projects', href: '/trabalhos' },
+			{ label: 'Blog', href: '/blog' },
+			{ label: 'About', href: '/sobre' },
+			{ label: 'Contact', href: '/contato' },
+		],
+	},
+	pt: {
+		navLabel: 'Principal',
+		menuOpen: 'Abrir menu',
+		menuClose: 'Fechar menu',
+		nav: [
+			{ label: 'Início', href: '/' },
+			{ label: 'Trabalhos', href: '/trabalhos' },
+			{ label: 'Sobre', href: '/sobre' },
+			{ label: 'Contato', href: '/contato' },
+			{ label: 'Blog', href: '/blog' },
+		],
+	},
+};
+
 const { locale = 'pt' } = Astro.props;
 const t = copy[locale];
 const current = Astro.url.pathname;
 
-// Hrefs are authored locale-neutral in site.ts and prefixed here, so a
-// Portuguese visitor never gets dropped onto an English route.
 const items = t.nav.map((item) => ({
 	...item,
 	href: localePath(item.href, locale),
