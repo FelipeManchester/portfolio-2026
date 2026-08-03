@@ -68,4 +68,37 @@ export function initNav(): void {
 	// Crossing the breakpoint must not strand the page open, and must recompute
 	// `inert` for the width it just landed on.
 	collapsed.addEventListener('change', () => setOpen(false));
+
+	// Hide on scroll down, reveal on scroll up — the nav pill and the corner
+	// frame (clock + locale switch) move together, as one piece of chrome. The
+	// small threshold keeps them still for the first bit of scroll, so nothing
+	// twitches away the moment the page moves; it never hides while the menu
+	// itself is open.
+	const frame = document.querySelector<HTMLElement>('[data-frame]');
+	let lastY = window.scrollY;
+	let ticking = false;
+
+	const applyScrollDirection = () => {
+		const y = window.scrollY;
+		const menuOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+		if (!menuOpen) {
+			const hide = y > lastY && y > 80;
+			header?.toggleAttribute('data-hidden', hide);
+			frame?.toggleAttribute('data-hidden', hide);
+		}
+
+		lastY = y;
+		ticking = false;
+	};
+
+	window.addEventListener(
+		'scroll',
+		() => {
+			if (ticking) return;
+			ticking = true;
+			requestAnimationFrame(applyScrollDirection);
+		},
+		{ passive: true },
+	);
 }

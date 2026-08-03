@@ -15,9 +15,9 @@ const copy: Record<Locale, { lead: string; all: string; view: string }> = {
 		view: 'View project',
 	},
 	pt: {
-		lead: 'Três projetos que mostram a variação — produto, catálogo e um site que depende de busca orgânica.',
-		all: 'Todos os projetos',
-		view: 'Ver projeto',
+		lead: 'Três trabalhos que mostram a variação — produto, catálogo e um site que depende de busca orgânica.',
+		all: 'Ver Todos os trabalhos',
+		view: 'Ver trabalho',
 	},
 };
 
@@ -38,12 +38,9 @@ const projects = await getFeaturedProjects(locale);
 	  directly — the "visit site" link lives there instead, alongside the write-up.
 	  The poster is a still image here; the video only plays on the detail page,
 	  so the home page never carries autoplaying media.
-
-	  The 1px gap plus the shared background is what draws every seam — one
-	  border per cell would double up where they meet.
 	*/}
 	<ul
-		class="mt-flow-lg grid grid-cols-3 gap-px border-y border-line bg-line p-0 max-[900px]:grid-cols-1"
+		class="mt-flow-lg grid grid-cols-3 gap-[clamp(1.5rem,3vw,2rem)] p-0 max-[900px]:grid-cols-1"
 		role="list"
 	>
 		{
@@ -51,9 +48,9 @@ const projects = await getFeaturedProjects(locale);
 				const href = localePath(`/trabalhos/${project.slug}`, locale);
 
 				return (
-					<li class="bg-bg">
+					<li>
 						<a class="group/card flex h-full flex-col text-inherit no-underline" data-reveal href={href}>
-							<div class="relative aspect-16/10 overflow-hidden border-b border-line bg-bg">
+							<div class="relative mb-4 aspect-16/10 overflow-hidden rounded-lg bg-bg">
 								{/* The card's art until a real recording exists: an initial on a
 								    hairline diagonal field, the same drafting-sheet vocabulary as
 								    the rest of the page rather than a generic grey box. */}

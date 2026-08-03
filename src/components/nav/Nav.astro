@@ -52,7 +52,10 @@ const items = t.nav.map((item) => ({
 {/* Watched by an IntersectionObserver to drive the scrolled state. */}
 <div data-nav-sentinel aria-hidden="true"></div>
 
-<header class="group fixed top-[clamp(0.75rem,2vw,1.5rem)] left-1/2 z-50 -translate-x-1/2" data-nav>
+<header
+	class="group fixed top-[clamp(0.75rem,2vw,1.5rem)] left-1/2 z-50 -translate-x-1/2 transition-[translate] duration-300 ease-quart data-hidden:-translate-y-[calc(100%+2rem)]"
+	data-nav
+>
 	{/*
 	  Scrolled: tighter, and the glass reads more clearly against content — the
 	  `group-data-scrolled` half of every pair below.
