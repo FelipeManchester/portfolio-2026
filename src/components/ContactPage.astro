@@ -3,18 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Footer from './Footer.astro';
-import { email, shared } from '../content/shared';
+import { email, shared, socials } from '../content/shared';
 import type { Locale } from '../lib/i18n';
 
 interface Props {
 	locale: Locale;
 }
-
-/** Recruiter-facing profiles, LinkedIn first. */
-const socials = [
-	{ label: 'LinkedIn', url: 'https://www.linkedin.com/in/felipemanchester' },
-	{ label: 'GitHub', url: 'https://github.com/felipemanchester' },
-];
 
 const copy: Record<Locale, { title: string; description: string; socialsLabel: string }> = {
 	en: {

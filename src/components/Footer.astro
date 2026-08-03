@@ -1,4 +1,5 @@
 ---
+import { socials } from '../content/shared';
 import type { Locale } from '../lib/i18n';
 
 interface Props {
@@ -7,11 +8,11 @@ interface Props {
 
 const copy: Record<Locale, { note: string; backToTop: string }> = {
 	en: {
-		note: 'Built with Astro. Designed and coded in Campos dos Goytacazes.',
+		note: 'Built with ❤️',
 		backToTop: 'Back to top',
 	},
 	pt: {
-		note: 'Feito com Astro. Desenhado e codado em Campos dos Goytacazes.',
+		note: 'Feito com ❤️',
 		backToTop: 'Voltar ao topo',
 	},
 };
@@ -29,10 +30,37 @@ const year = new Date().getFullYear();
 	<p class="m-0 font-mono text-mono tracking-mono text-muted uppercase tabular-nums">
 		&copy; {year}
 	</p>
-	<a
-		class="m-0 ml-auto font-mono text-mono tracking-mono text-muted uppercase no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
-		href="#main"
-	>
-		{t.backToTop}
-	</a>
+	<div class="ml-auto flex items-center gap-5">
+		{
+			socials.map((social) => (
+				<a
+					class="group/social m-0 inline-flex items-center gap-1.5 font-mono text-mono tracking-mono text-muted uppercase no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
+					href={social.url}
+					target="_blank"
+					rel="noopener"
+				>
+					{social.label}
+					<svg
+						class="size-2.75 transition-transform duration-300 ease-expo group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5 group-focus-visible/social:translate-x-0.5 group-focus-visible/social:-translate-y-0.5"
+						viewBox="0 0 12 12"
+						aria-hidden="true"
+					>
+						<path
+							d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.2"
+						/>
+					</svg>
+				</a>
+			))
+		}
+		<a
+			class="m-0 font-mono text-mono tracking-mono text-muted uppercase no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
+			href="#main"
+		>
+			{t.backToTop}
+		</a>
+	</div>
 </footer>
+

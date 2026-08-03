@@ -70,25 +70,39 @@ export function initNav(): void {
 	collapsed.addEventListener('change', () => setOpen(false));
 
 	// Hide on scroll down, reveal on scroll up — the nav pill and the corner
-	// frame (clock + locale switch) move together, as one piece of chrome. The
-	// small threshold keeps them still for the first bit of scroll, so nothing
-	// twitches away the moment the page moves; it never hides while the menu
-	// itself is open.
+	// frame (clock + locale switch) move together, as one piece of chrome. It
+	// never hides while the menu itself is open.
 	const frame = document.querySelector<HTMLElement>('[data-frame]');
-	let lastY = window.scrollY;
+	const HIDE_AFTER = 80;
+	// Lenis eases toward its target rather than tracking the wheel 1:1, so
+	// scrollY does not step up in a clean line frame to frame — comparing every
+	// frame to the one right before it reads spurious reversals into a single
+	// downward gesture. Reacting only once movement clears this many pixels
+	// (and only re-arming the baseline at that point) filters that out; a
+	// same-frame comparison flickered data-hidden on and off fast enough that
+	// the 300ms CSS transition never reached either end, which looked like the
+	// nav trying to reappear before snapping shut.
+	const DIRECTION_THRESHOLD = 24;
+
+	let baseline = window.scrollY;
+	let hidden = false;
 	let ticking = false;
 
 	const applyScrollDirection = () => {
 		const y = window.scrollY;
+		const delta = y - baseline;
 		const menuOpen = trigger.getAttribute('aria-expanded') === 'true';
 
-		if (!menuOpen) {
-			const hide = y > lastY && y > 80;
-			header?.toggleAttribute('data-hidden', hide);
-			frame?.toggleAttribute('data-hidden', hide);
+		if (y <= HIDE_AFTER) {
+			hidden = false;
+			baseline = y;
+		} else if (!menuOpen && Math.abs(delta) >= DIRECTION_THRESHOLD) {
+			hidden = delta > 0;
+			baseline = y;
 		}
 
-		lastY = y;
+		header?.toggleAttribute('data-hidden', hidden);
+		frame?.toggleAttribute('data-hidden', hidden);
 		ticking = false;
 	};
 

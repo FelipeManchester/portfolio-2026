@@ -23,6 +23,12 @@ export const location = {
 	label: 'Campos dos Goytacazes, Brazil',
 } as const;
 
+/** Recruiter-facing profiles, LinkedIn first. ContactPage.astro and Footer.astro. */
+export const socials = [
+	{ label: 'LinkedIn', url: 'https://www.linkedin.com/in/felipemanchester' },
+	{ label: 'GitHub', url: 'https://github.com/felipemanchester' },
+];
+
 type Shared = {
 	/** Work.astro (home teaser) and TrabalhosList.astro (the full register). */
 	workLabel: string;

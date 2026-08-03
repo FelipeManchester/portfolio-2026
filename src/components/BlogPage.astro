@@ -82,9 +82,10 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 		</p>
 
 		{/*
-		  Hidden until filter.ts takes over, so a visitor never gets a control row
-		  that does nothing. Every post is in the markup either way.
-		*/}
+		  Tag filter, switched off for now — too few posts for it to be worth
+		  the control row. Put it back (and re-enable initFilter() below) once
+		  there's enough of a spread across tags to make filtering useful.
+
 		<div
 			class="mt-flow-md flex flex-wrap items-center gap-x-2 gap-y-2"
 			data-filter
@@ -100,19 +101,18 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 			>
 				{t.allTag}
 			</button>
-			{
-				tags.map((tag) => (
-					<button
-						type="button"
-						class="cursor-pointer rounded-full border border-line bg-transparent px-3 py-1.5 font-mono text-mono tracking-mono text-muted uppercase transition-[border-color,color] duration-220 ease-quart hover:border-[color-mix(in_oklab,var(--accent)_55%,var(--line))] hover:text-accent aria-pressed:border-fg aria-pressed:text-fg"
-						data-filter-tag={tag}
-						aria-pressed="false"
-					>
-						{tag}
-					</button>
-				))
-			}
+			{tags.map((tag) => (
+				<button
+					type="button"
+					class="cursor-pointer rounded-full border border-line bg-transparent px-3 py-1.5 font-mono text-mono tracking-mono text-muted uppercase transition-[border-color,color] duration-220 ease-quart hover:border-[color-mix(in_oklab,var(--accent)_55%,var(--line))] hover:text-accent aria-pressed:border-fg aria-pressed:text-fg"
+					data-filter-tag={tag}
+					aria-pressed="false"
+				>
+					{tag}
+				</button>
+			))}
 		</div>
+		*/}
 
 		<ul class="mt-flow-lg flex list-none flex-col border-t border-line p-0" role="list">
 			{

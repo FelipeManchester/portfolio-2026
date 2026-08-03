@@ -57,11 +57,13 @@ const items = t.nav.map((item) => ({
 	data-nav
 >
 	{/*
-	  Scrolled: tighter, and the glass reads more clearly against content — the
-	  `group-data-scrolled` half of every pair below.
+	  Glass only at rest, floating over the hero. Past that — `group-data-scrolled`
+	  — there is page content underneath instead of empty space, so the pill goes
+	  fully opaque rather than letting text show through blurred; the backdrop
+	  filters are dropped in that state since they'd have nothing left to do.
 	*/}
 	<nav
-		class="relative flex items-center gap-1 rounded-full border border-line bg-bg/72 py-1.75 pr-2 pl-3.5 shadow-pill backdrop-blur-md backdrop-saturate-[1.4] transition-[padding,background-color,box-shadow,backdrop-filter] duration-300 ease-quart group-data-scrolled:bg-bg/88 group-data-scrolled:py-1.25 group-data-scrolled:shadow-pill-scrolled group-data-scrolled:backdrop-blur-[20px] group-data-scrolled:backdrop-saturate-[1.6] max-[720px]:px-2"
+		class="relative flex items-center gap-1 rounded-full border border-line bg-bg/72 py-1.75 pr-2 pl-3.5 shadow-pill backdrop-blur-md backdrop-saturate-[1.4] transition-[padding,background-color,box-shadow,backdrop-filter] duration-300 ease-quart group-data-scrolled:bg-bg group-data-scrolled:py-1.25 group-data-scrolled:shadow-pill-scrolled group-data-scrolled:backdrop-blur-none group-data-scrolled:backdrop-saturate-100 max-[720px]:px-2"
 		aria-label={t.navLabel}
 	>
 		{/*
