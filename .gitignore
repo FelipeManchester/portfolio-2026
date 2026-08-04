@@ -22,3 +22,13 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# editor / AI agent instruction files, local only
+.clinerules/
+.cursor/
+.github/
+.opencode/
+.vscode/
+.windsurf/
+AGENTS.md
+CLAUDE.md
