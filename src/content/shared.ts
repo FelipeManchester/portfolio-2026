@@ -51,15 +51,15 @@ export const shared: Record<Locale, Shared> = {
   en: {
     workLabel: 'Selected work',
     visitSite: 'Visit site',
-    trabalhosTitle: 'Work — Felipe Manchester',
+    trabalhosTitle: 'Work | Felipe Manchester',
     aboutLabel: 'About',
     aboutBody:
-      'Full-stack developer. I build fast, accessible, SEO-optimized applications structured around current technologies, focused on performance, usability and code quality, from planning to deploy.',
+      '<strong>Full-stack</strong> developer. I build fast, accessible, <strong>SEO</strong>-optimized applications structured around current technologies, focused on <strong>performance</strong>, usability and code quality, from planning to deploy.',
     contactLabel: 'Contact',
     contactHeadline: 'Your next project starts here.',
     contactBody:
-      'If you need a website, want to get a project off the ground, or you\'re looking for a developer for your team, get in touch. Email is the fastest way to reach me, and I answer every message.',
-    blogTitle: 'Blog — Felipe Manchester',
+      "If you need a website, want to get a project off the ground, or you're looking for a developer for your team, get in touch. Email is the fastest way to reach me, and I answer every message.",
+    blogTitle: 'Blog | Felipe Manchester',
     journalLabel: 'Journal',
     journalAll: 'All posts',
     readTime: 'min read',
@@ -67,15 +67,15 @@ export const shared: Record<Locale, Shared> = {
   pt: {
     workLabel: 'Trabalhos',
     visitSite: 'Ver site',
-    trabalhosTitle: 'Trabalhos — Felipe Manchester',
+    trabalhosTitle: 'Trabalhos | Felipe Manchester',
     aboutLabel: 'Sobre',
     aboutBody:
-      'Desenvolvedor full-stack. Crio aplicações rápidas, acessíveis, otimizadas para SEO e estruturadas para as tecnologias atuais, com foco em performance, usabilidade e qualidade do código, do planejamento ao deploy.',
+      'Desenvolvedor <strong>full-stack</strong>. Crio aplicações rápidas, acessíveis, otimizadas para <strong>SEO</strong> e estruturadas para as tecnologias atuais, com foco em <strong>performance</strong>, usabilidade e qualidade do código, do planejamento ao deploy.',
     contactLabel: 'Contato',
     contactHeadline: 'Seu próximo projeto começa aqui.',
     contactBody:
       'Se você precisa de um site, quer tirar um projeto do papel ou está procurando um desenvolvedor para a sua equipe, entre em contato. O e-mail é a forma mais rápida de falar comigo, e respondo todas as mensagens.',
-    blogTitle: 'Blog — Felipe Manchester',
+    blogTitle: 'Blog | Felipe Manchester',
     journalLabel: 'Blog',
     journalAll: 'Todos os posts',
     readTime: 'min de leitura',

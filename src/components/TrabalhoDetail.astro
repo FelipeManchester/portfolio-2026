@@ -18,7 +18,7 @@ const back: Record<Locale, string> = { en: 'All work', pt: 'Todos os trabalhos' 
 const { locale, project } = Astro.props;
 const t = shared[locale];
 const base = localePath('/trabalhos', locale);
-const title = `${project.name} — ${t.trabalhosTitle}`;
+const title = `${project.name} | ${t.trabalhosTitle}`;
 ---
 
 <BaseLayout locale={locale} title={title} description={project.summary}>

@@ -15,7 +15,7 @@ interface Props {
 const { locale, post } = Astro.props;
 const t = shared[locale];
 const base = localePath('/blog', locale);
-const title = `${post.title} — ${t.blogTitle}`;
+const title = `${post.title} | ${t.blogTitle}`;
 
 // Same server-side formatting as the list: one date, identical for everyone.
 const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', {
