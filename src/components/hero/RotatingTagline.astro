@@ -47,15 +47,22 @@ const t = copy[locale];
 	{/* One stable sentence for assistive tech; the rotator is decorative. */}
 	<p class="sr-only">{t.staticLine}</p>
 
-	<div class="tagline__window" data-tagline aria-hidden="true">
-		{
-			t.taglines.map((line) => (
-				<span class="tagline__line" data-tagline-line>
-					{line}
-				</span>
-			))
-		}
-	</div>
+	{/*
+	  The phrase list rides along as JSON so tagline.ts can type and delete its
+	  way through all of them — the first one is plain text here, so it is
+	  correct and readable with no JavaScript at all, and the script settles it
+	  into character spans in place rather than replaying an entrance for it.
+	*/}
+	<p
+		class="tagline__line"
+		data-tagline
+		data-tagline-phrases={JSON.stringify(t.taglines)}
+		aria-hidden="true"
+	>
+		<span data-tagline-text>{t.taglines[0]}</span><span
+			class="tagline__caret"
+			data-tagline-caret></span>
+	</p>
 </div>
 
 <style>
@@ -63,31 +70,15 @@ const t = copy[locale];
 		animation: tagline-in 900ms var(--ease-out-expo) 700ms both;
 	}
 
-	/* The sentences share one grid cell rather than being absolutely
-	   positioned: they still overlap, but they all contribute to the intrinsic
-	   size, so the window is as wide as the longest line. Absolute children
-	   would leave it 0px wide and `overflow: hidden` would clip every word. */
-	.tagline__window {
-		display: grid;
-		overflow: hidden;
+	.tagline__line {
+		margin: 0;
 		color: var(--fg-muted);
 		font-size: var(--step-tagline);
 		line-height: 1.6;
 		letter-spacing: -0.011em;
-	}
-
-	.tagline__line {
-		grid-area: 1 / 1;
+		/* Kept on one line at every width, so a phrase growing character by
+		   character never wraps mid-type. */
 		white-space: nowrap;
-		/* Only the first sentence is visible without JavaScript. The script
-		   takes over with fill:forwards animations on the same property. */
-		transform: translateY(100%);
-		opacity: 0;
-	}
-
-	.tagline__line:first-child {
-		transform: translateY(0);
-		opacity: 1;
 	}
 
 	@keyframes tagline-in {
@@ -101,7 +92,49 @@ const t = copy[locale];
 		}
 	}
 
-	/* Kept on one line at every width so the vertical slide always masks
-	   exactly one line height; the clamped size keeps the longest sentence
-	   inside a 320px viewport. */
+	/* Each character fades and lifts into place — the same settle the name's
+	   own letters use behind the plotter line — and leaves the same way in
+	   reverse, faster, since deleting reads better brisk than deliberate. */
+	.tagline__char {
+		display: inline-block;
+		opacity: 0;
+		transform: translate3d(0, 0.22em, 0);
+		transition:
+			opacity 220ms var(--ease-out-expo),
+			transform 220ms var(--ease-out-expo);
+	}
+
+	.tagline__char.in {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+
+	.tagline__char.out {
+		opacity: 0;
+		transform: translate3d(0, -0.18em, 0);
+		transition-duration: 140ms;
+	}
+
+	/* A text caret, not a block cursor — solid while the line is actively
+	   typing or deleting, blinking only while it sits still and holds. */
+	.tagline__caret {
+		display: inline-block;
+		width: 2px;
+		height: 1em;
+		margin-left: 0.2em;
+		vertical-align: -0.15em;
+		background: var(--accent);
+		animation: tagline-caret-blink 1s step-end infinite;
+	}
+
+	.tagline__caret.is-typing {
+		animation-play-state: paused;
+		opacity: 1;
+	}
+
+	@keyframes tagline-caret-blink {
+		50% {
+			opacity: 0;
+		}
+	}
 </style>

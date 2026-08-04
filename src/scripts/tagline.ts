@@ -1,77 +1,133 @@
 /**
- * Rotating tagline.
+ * Rotating tagline — plotter settle.
  *
- * Uses the Web Animations API directly rather than GSAP — this is two eased
- * transforms on a timer, and it runs before (and without) any animation
- * library. The rotator is aria-hidden with a static sentence beside it: a
- * live region that rewrites itself every three seconds is hostile to screen
- * readers, and the sentences say the same thing anyway.
+ * Each phrase types and deletes character by character, every glyph fading
+ * and lifting into place rather than snapping in monospace-typewriter style —
+ * the same settle the hero name's own letters use behind the plotter line.
+ * The rotator is aria-hidden with a static sentence beside it: a live region
+ * that rewrites itself constantly is hostile to screen readers, and the
+ * sentences say the same thing anyway.
  */
 
-const DWELL = 2400;
-const DURATION = 1200;
-const EASING = 'cubic-bezier(0.16, 1, 0.3, 1)';
+const TYPE_MS = 42;
+const DELETE_MS = 32;
+const HOLD_MS = 2200;
+const GAP_MS = 220;
 
 export function initTagline(): void {
-  const root = document.querySelector<HTMLElement>('[data-tagline]');
-  if (!root) return;
+	const root = document.querySelector<HTMLElement>('[data-tagline]');
+	if (!root) return;
 
-  const lines = [...root.querySelectorAll<HTMLElement>('[data-tagline-line]')];
-  if (lines.length < 2) return;
+	let phrases: string[] = [];
+	try {
+		phrases = JSON.parse(root.dataset.taglinePhrases ?? '[]');
+	} catch {
+		phrases = [];
+	}
+	if (phrases.length < 2) return;
 
-  // Reduced motion keeps the first sentence, which is already in the HTML.
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+	const text = root.querySelector<HTMLElement>('[data-tagline-text]');
+	const caret = root.querySelector<HTMLElement>('[data-tagline-caret]');
+	if (!text || !caret) return;
 
-  let index = 0;
-  let timer = 0;
-  let paused = false;
+	// Reduced motion keeps the first phrase, which is already in the HTML.
+	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const advance = () => {
-    const next = (index + 1) % lines.length;
-    const outgoing = lines[index];
-    const incoming = lines[next];
-    if (!outgoing || !incoming) return;
+	let index = 0;
+	let spans: HTMLSpanElement[] = [];
+	let paused = false;
+	// True only during the post-type hold — pausing mid-type or mid-delete is
+	// not worth the bookkeeping, those phases are short enough to just finish.
+	let holding = false;
+	let advanced = false;
 
-    outgoing.animate(
-      [
-        { transform: 'translateY(0)', opacity: 1 },
-        { transform: 'translateY(-100%)', opacity: 0 },
-      ],
-      { duration: DURATION, easing: EASING, fill: 'forwards' },
-    );
+	const setTyping = (typing: boolean) => caret.classList.toggle('is-typing', typing);
 
-    incoming.animate(
-      [
-        { transform: 'translateY(100%)', opacity: 0 },
-        { transform: 'translateY(0)', opacity: 1 },
-      ],
-      { duration: DURATION, easing: EASING, fill: 'forwards' },
-    );
+	// The first phrase is already sitting there as plain text (progressive
+	// enhancement) — settle it into character spans in place, with no
+	// entrance, so nothing replays what the visitor already saw.
+	const seed = () => {
+		const value = text.textContent ?? '';
+		text.textContent = '';
+		spans = [...value].map((ch) => {
+			const span = document.createElement('span');
+			span.className = 'tagline__char in';
+			span.textContent = ch;
+			text.appendChild(span);
+			return span;
+		});
+	};
 
-    index = next;
-  };
+	const typeIn = (value: string, onDone: () => void) => {
+		setTyping(true);
+		let i = 0;
+		const addChar = () => {
+			const span = document.createElement('span');
+			span.className = 'tagline__char';
+			span.textContent = value[i] ?? '';
+			text.appendChild(span);
+			spans.push(span);
+			// Next frame, so the transition actually plays from the opacity:0
+			// starting state rather than snapping straight to visible.
+			requestAnimationFrame(() => span.classList.add('in'));
+			i += 1;
+			if (i < value.length) window.setTimeout(addChar, TYPE_MS);
+			else {
+				setTyping(false);
+				onDone();
+			}
+		};
+		addChar();
+	};
 
-  const schedule = () => {
-    window.clearTimeout(timer);
-    if (paused) return;
-    timer = window.setTimeout(() => {
-      advance();
-      schedule();
-    }, DWELL);
-  };
+	const deleteOut = (onDone: () => void) => {
+		setTyping(true);
+		const removeLast = () => {
+			const span = spans.pop();
+			if (!span) {
+				setTyping(false);
+				onDone();
+				return;
+			}
+			span.classList.remove('in');
+			span.classList.add('out');
+			window.setTimeout(() => {
+				span.remove();
+				removeLast();
+			}, DELETE_MS);
+		};
+		removeLast();
+	};
 
-  const setPaused = (value: boolean) => {
-    paused = value;
-    if (value) window.clearTimeout(timer);
-    else schedule();
-  };
+	const tryAdvance = () => {
+		if (paused || !holding || advanced) return;
+		advanced = true;
+		holding = false;
 
-  // Hovering or focusing near the tagline means the visitor is reading it.
-  root.addEventListener('pointerenter', () => setPaused(true));
-  root.addEventListener('pointerleave', () => setPaused(false));
-  document.addEventListener('visibilitychange', () =>
-    setPaused(document.hidden),
-  );
+		deleteOut(() => {
+			index = (index + 1) % phrases.length;
+			window.setTimeout(() => {
+				advanced = false;
+				typeIn(phrases[index], () => {
+					holding = true;
+					window.setTimeout(tryAdvance, HOLD_MS);
+				});
+			}, GAP_MS);
+		});
+	};
 
-  schedule();
+	const setPaused = (value: boolean) => {
+		paused = value;
+		if (!paused) tryAdvance();
+	};
+
+	// Hovering or focusing near the tagline means the visitor is reading it —
+	// only takes effect during the hold, per the note on `holding` above.
+	root.addEventListener('pointerenter', () => setPaused(true));
+	root.addEventListener('pointerleave', () => setPaused(false));
+	document.addEventListener('visibilitychange', () => setPaused(document.hidden));
+
+	seed();
+	holding = true;
+	window.setTimeout(tryAdvance, HOLD_MS);
 }
