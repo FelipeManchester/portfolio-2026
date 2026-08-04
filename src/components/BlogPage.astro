@@ -57,7 +57,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 
-	<section
+	<main
 		class="relative z-1 mx-auto max-w-page px-frame pt-page-top pb-section"
 		id="main"
 		aria-labelledby="blog-label"
@@ -155,7 +155,7 @@ const dateFormat = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'pt-BR', 
 		</ul>
 
 		<p class="mt-flow-md text-muted" data-filter-empty hidden>{t.empty}</p>
-	</section>
+	</main>
 
 	<Footer locale={locale} />
 </BaseLayout>

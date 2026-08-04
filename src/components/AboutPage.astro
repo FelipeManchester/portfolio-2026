@@ -48,7 +48,7 @@ const t = { ...shared[locale], ...copy[locale] };
 	<BlueprintFrame locale={locale} />
 	<Nav locale={locale} />
 
-	<section
+	<main
 		class="relative z-1 mx-auto max-w-page px-frame pt-page-top pb-[clamp(3rem,8vh,5rem)]"
 		id="main"
 		aria-labelledby="about-page-label"
@@ -70,7 +70,7 @@ const t = { ...shared[locale], ...copy[locale] };
 				{t.intro.map((paragraph) => <p set:html={paragraph} />)}
 			</div>
 		</div>
-	</section>
+	</main>
 
 	<Skills locale={locale} />
 	<Footer locale={locale} />
