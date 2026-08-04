@@ -25,6 +25,10 @@ const alternates = locales.map((code) => {
 	const path = localePath(Astro.url.pathname, code);
 	return { code, href: Astro.site ? new URL(path, Astro.site).href : path };
 });
+
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.pathname;
+const ogImage = Astro.site ? new URL('/og-image.png', Astro.site).href : '/og-image.png';
+const ogLocale: Record<Locale, string> = { en: 'en_US', pt: 'pt_BR' };
 ---
 
 <html lang={locale}>
@@ -38,9 +42,25 @@ const alternates = locales.map((code) => {
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />
 		<link rel="icon" type="image/png" href="/favicon.png" sizes="512x512" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<link rel="canonical" href={canonicalUrl} />
 
 		{alternates.map((alt) => <link rel="alternate" hreflang={alt.code} href={alt.href} />)}
 		<link rel="alternate" hreflang="x-default" href={alternates[0]?.href} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Felipe Manchester" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:locale" content={ogLocale[locale]} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="630" />
+		<meta property="og:image:height" content="630" />
+
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
 
 		<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 		<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />

@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = '404 | Felipe Manchester';
+const description = 'Page not found.';
+---
+
+<BaseLayout locale="pt" title={title} description={description}>
+	<main class="grid min-h-dvh place-items-center px-frame text-center">
+		<div>
+			<p class="m-0 font-mono text-mono tracking-mono text-muted uppercase">404</p>
+			<h1 class="mt-3 text-project leading-[1.1] font-semibold tracking-[-0.03em] text-balance">
+				Página não encontrada.<br />Page not found.
+			</h1>
+			<p class="mx-auto mt-4 max-w-[38ch] text-lead leading-[1.4] text-muted text-balance">
+				O link pode estar quebrado ou a página foi movida.<br />
+				The link may be broken, or the page was moved.
+			</p>
+			<a
+				class="mt-8 inline-flex items-center gap-2 font-mono text-mono tracking-mono text-fg uppercase underline decoration-line underline-offset-4 transition-colors duration-220 ease-quart hover:text-accent"
+				href="/"
+			>
+				Voltar ao início / Back home
+			</a>
+		</div>
+	</main>
+</BaseLayout>
