@@ -1,5 +1,4 @@
 ---
-import { location } from '../../content/shared';
 import type { Locale } from '../../lib/i18n';
 
 interface Props {
@@ -9,6 +8,9 @@ interface Props {
 /** Screen-reader-only: the clock reads as bare digits without it. */
 const label: Record<Locale, string> = { en: 'Local time', pt: 'Horário local' };
 
+/** Campos dos Goytacazes, RJ — not displayed, just what the clock reads against. */
+const TIME_ZONE = 'America/Sao_Paulo';
+
 const { locale = 'pt' } = Astro.props;
 ---
 
@@ -17,7 +19,7 @@ const { locale = 'pt' } = Astro.props;
   build, so a baked timestamp would be stale the moment it deployed. The
   monospace face means filling it in causes no reflow.
 */}
-<span class="tabular-nums" data-clock data-timezone={location.timeZone}>
+<span class="tabular-nums" data-clock data-timezone={TIME_ZONE}>
 	<span class="sr-only">{label[locale]}</span>
 	<span data-clock-value>--:--</span> BRT
 </span>

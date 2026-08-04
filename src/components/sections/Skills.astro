@@ -7,8 +7,8 @@ interface Props {
 }
 
 const copy: Record<Locale, { label: string; lead: string }> = {
-	en: { label: 'Skills', lead: 'The stack behind the work above.' },
-	pt: { label: 'Habilidades', lead: 'A stack por trás do trabalho acima.' },
+	en: { label: 'Skills', lead: 'Technologies I use to turn ideas into products.' },
+	pt: { label: 'Habilidades', lead: 'As tecnologias que utilizo para transformar ideias em produtos.' },
 };
 
 /**
@@ -66,7 +66,7 @@ const t = copy[locale];
 					</h3>
 					<ul class="m-0 flex list-none flex-wrap gap-x-2.5 gap-y-2 p-0" role="list">
 						{group.skills.map((skill) => (
-							<li class="rounded-full border border-line px-3 py-1.5 text-[0.9375rem] tracking-[-0.006em] transition-[border-color,color] duration-220 ease-quart hover:border-[color-mix(in_oklab,var(--accent)_55%,var(--line))] hover:text-accent">
+							<li class="rounded-full border border-line px-3 py-1.5 text-base tracking-[-0.006em] transition-[border-color,color] duration-220 ease-quart hover:border-[color-mix(in_oklab,var(--accent)_55%,var(--line))] hover:text-accent">
 								{skill}
 							</li>
 						))}

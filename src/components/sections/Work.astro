@@ -10,12 +10,12 @@ interface Props {
 
 const copy: Record<Locale, { lead: string; all: string; view: string }> = {
 	en: {
-		lead: 'Three builds that show the range — product, catalogue, and a site that lives or dies on search.',
+		lead: 'Works built and shipped throughout my career. Each one with a different challenge.',
 		all: 'View all projects',
 		view: 'View project',
 	},
 	pt: {
-		lead: 'Três trabalhos que mostram a variação — produto, catálogo e um site que depende de busca orgânica.',
+		lead: 'Trabalhos desenvolvidos e publicados ao longo da minha carreira. Cada um com um desafio diferente.',
 		all: 'Ver Todos os trabalhos',
 		view: 'Ver trabalho',
 	},
@@ -95,7 +95,7 @@ const projects = await getFeaturedProjects(locale);
 								<h3 class="m-0 text-project leading-[1.08] font-semibold tracking-[-0.03em] transition-colors duration-260 ease-expo group-hover/card:text-accent group-focus-visible/card:text-accent">
 									{project.name}
 								</h3>
-								<p class="m-0 text-[0.9375rem] leading-relaxed text-muted text-pretty">
+								<p class="m-0 text-base leading-relaxed text-muted text-pretty">
 									{project.summary}
 								</p>
 

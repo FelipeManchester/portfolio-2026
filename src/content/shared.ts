@@ -17,73 +17,67 @@ import type { Locale } from '../lib/i18n';
 /** Where mail from the contact section and the footer goes. */
 export const email = 'f.p2809@gmail.com';
 
-/** Campos dos Goytacazes, RJ. Drives the clock annotation and the about page. */
-export const location = {
-	timeZone: 'America/Sao_Paulo',
-	label: 'Campos dos Goytacazes, Brazil',
-} as const;
-
 /** Recruiter-facing profiles, LinkedIn first. ContactPage.astro and Footer.astro. */
 export const socials = [
-	{ label: 'LinkedIn', url: 'https://www.linkedin.com/in/felipemanchester' },
-	{ label: 'GitHub', url: 'https://github.com/felipemanchester' },
+  { label: 'LinkedIn', url: 'https://www.linkedin.com/in/felipemanchester' },
+  { label: 'GitHub', url: 'https://github.com/felipemanchester' },
 ];
 
 type Shared = {
-	/** Work.astro (home teaser) and TrabalhosList.astro (the full register). */
-	workLabel: string;
-	/** Work.astro and TrabalhoDetail.astro — both link out to a live project. */
-	visitSite: string;
-	/** Titles /trabalhos, and suffixes every project detail page. */
-	trabalhosTitle: string;
-	/** hero/About.astro folds the same intro the /sobre page opens with. */
-	aboutLabel: string;
-	aboutBody: string;
-	/** The contact section on the home page and the /contato page share a voice. */
-	contactLabel: string;
-	contactHeadline: string;
-	contactBody: string;
-	/** Titles /blog, and suffixes every post page. */
-	blogTitle: string;
-	/** Journal.astro (home teaser) and BlogPage.astro. */
-	journalLabel: string;
-	/** The teaser's "see everything" link, and the post page's way back to it. */
-	journalAll: string;
-	/** Printed next to a read time in the teaser, the list and the post itself. */
-	readTime: string;
+  /** Work.astro (home teaser) and TrabalhosList.astro (the full register). */
+  workLabel: string;
+  /** Work.astro and TrabalhoDetail.astro — both link out to a live project. */
+  visitSite: string;
+  /** Titles /trabalhos, and suffixes every project detail page. */
+  trabalhosTitle: string;
+  /** hero/About.astro folds the same intro the /sobre page opens with. */
+  aboutLabel: string;
+  aboutBody: string;
+  /** The contact section on the home page and the /contato page share a voice. */
+  contactLabel: string;
+  contactHeadline: string;
+  contactBody: string;
+  /** Titles /blog, and suffixes every post page. */
+  blogTitle: string;
+  /** Journal.astro (home teaser) and BlogPage.astro. */
+  journalLabel: string;
+  /** The teaser's "see everything" link, and the post page's way back to it. */
+  journalAll: string;
+  /** Printed next to a read time in the teaser, the list and the post itself. */
+  readTime: string;
 };
 
 export const shared: Record<Locale, Shared> = {
-	en: {
-		workLabel: 'Selected work',
-		visitSite: 'Visit site',
-		trabalhosTitle: 'Work — Felipe Manchester',
-		aboutLabel: 'About',
-		aboutBody:
-			'Full-stack developer based in Brazil, working across React, Next.js and Astro. I care about the parts people feel: load time, motion, and interfaces that hold up on every screen.',
-		contactLabel: 'Contact',
-		contactHeadline: 'Let’s build something.',
-		contactBody:
-			'Open to full-time roles and freelance projects. The fastest way to reach me is email — I answer every message.',
-		blogTitle: 'Blog — Felipe Manchester',
-		journalLabel: 'Journal',
-		journalAll: 'All posts',
-		readTime: 'min read',
-	},
-	pt: {
-		workLabel: 'Trabalhos',
-		visitSite: 'Ver site',
-		trabalhosTitle: 'Trabalhos — Felipe Manchester',
-		aboutLabel: 'Sobre',
-		aboutBody:
-			'Desenvolvedor full-stack no Brasil, trabalhando com React, Next.js e Astro. Cuido do que as pessoas sentem: tempo de carregamento, animação e interfaces que funcionam em qualquer tela.',
-		contactLabel: 'Contato',
-		contactHeadline: 'Vamos construir algo.',
-		contactBody:
-			'Aberto a vagas efetivas e projetos freelance. O caminho mais rápido é o e-mail — respondo todas as mensagens.',
-		blogTitle: 'Blog — Felipe Manchester',
-		journalLabel: 'Blog',
-		journalAll: 'Todos os posts',
-		readTime: 'min de leitura',
-	},
+  en: {
+    workLabel: 'Selected work',
+    visitSite: 'Visit site',
+    trabalhosTitle: 'Work — Felipe Manchester',
+    aboutLabel: 'About',
+    aboutBody:
+      'Full-stack developer. I build fast, accessible, SEO-optimized applications structured around current technologies, focused on performance, usability and code quality, from planning to deploy.',
+    contactLabel: 'Contact',
+    contactHeadline: 'Your next project starts here.',
+    contactBody:
+      'If you need a website, want to get a project off the ground, or you\'re looking for a developer for your team, get in touch. Email is the fastest way to reach me, and I answer every message.',
+    blogTitle: 'Blog — Felipe Manchester',
+    journalLabel: 'Journal',
+    journalAll: 'All posts',
+    readTime: 'min read',
+  },
+  pt: {
+    workLabel: 'Trabalhos',
+    visitSite: 'Ver site',
+    trabalhosTitle: 'Trabalhos — Felipe Manchester',
+    aboutLabel: 'Sobre',
+    aboutBody:
+      'Desenvolvedor full-stack. Crio aplicações rápidas, acessíveis, otimizadas para SEO e estruturadas para as tecnologias atuais, com foco em performance, usabilidade e qualidade do código, do planejamento ao deploy.',
+    contactLabel: 'Contato',
+    contactHeadline: 'Seu próximo projeto começa aqui.',
+    contactBody:
+      'Se você precisa de um site, quer tirar um projeto do papel ou está procurando um desenvolvedor para a sua equipe, entre em contato. O e-mail é a forma mais rápida de falar comigo, e respondo todas as mensagens.',
+    blogTitle: 'Blog — Felipe Manchester',
+    journalLabel: 'Blog',
+    journalAll: 'Todos os posts',
+    readTime: 'min de leitura',
+  },
 };

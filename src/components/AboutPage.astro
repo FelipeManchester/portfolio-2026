@@ -5,29 +5,37 @@ import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Skills from './sections/Skills.astro';
 import Contact from './sections/Contact.astro';
 import Footer from './Footer.astro';
-import { location, shared } from '../content/shared';
+import { shared } from '../content/shared';
 import type { Locale } from '../lib/i18n';
 
 interface Props {
 	locale: Locale;
 }
 
-const copy: Record<Locale, { title: string; description: string; where: string; intro: string }> = {
+const copy: Record<Locale, { title: string; description: string; intro: string[] }> = {
 	en: {
 		title: 'About — Felipe Manchester',
 		description: 'Full-stack developer based in Brazil, working across React, Next.js and Astro.',
-		where: 'Based in',
-		// Placeholder copy — meant to be rewritten.
-		intro:
-			'Most of what I do is invisible when it works: pages that load before anyone notices, layouts that hold up on the fifth screen size, code the next person can actually read. I like working close to the design, not just implementing it.',
+		// Each entry is its own paragraph, rendered with set:html for the <strong> spans.
+		intro: [
+			'Hi!',
+			'My name is Felipe Manchester. I\'m a <strong>full-stack developer</strong> with a strong front-end background. I like turning ideas into well-built applications, always paying attention to accessibility, performance, SEO and code quality.',
+			'I like understanding the problem before I start building. The better I understand the product, the more carefully I can think about the experience of whoever is going to use it. I believe a good site needs to be <strong>fast, easy to use and simple to evolve</strong>.',
+			'I\'m also always learning. Whenever I come across a new technology, tool or concept that could improve the quality of my work, I study it, test it, and figure out how it actually works. That curiosity is part of how I work.',
+			'A few people have inspired me since I first got into tech — <strong>Mayk Brito, André Rafael, Zeno Rocha and Fábio Akita</strong>. Their content shaped a lot of my growth as a developer, and still does.',
+		],
 	},
 	pt: {
 		title: 'Sobre — Felipe Manchester',
 		description:
 			'Desenvolvedor full-stack no Brasil, trabalhando com React, Next.js e Astro.',
-		where: 'Baseado em',
-		intro:
-			'A maior parte do que eu faço é invisível quando funciona: páginas que carregam antes de alguém notar, layouts que se sustentam na quinta tela diferente, código que a próxima pessoa consegue ler de fato. Gosto de trabalhar perto do design, não só implementá-lo.',
+		intro: [
+			'Olá!',
+			'Meu nome é Felipe Manchester. Sou <strong>desenvolvedor full-stack</strong>, com uma forte base em front-end. Gosto de criar e transformar ideias em aplicações bem construídas. Sempre dou atenção à acessibilidade, à performance, ao SEO e à qualidade do código.',
+			'Gosto de entender o problema antes de começar a desenvolver. Compreendendo melhor o produto, consigo pensar com mais cuidado na experiência de quem vai usá-lo. Acredito que um bom site precisa ser <strong>rápido, fácil de usar e simples de evoluir</strong>.',
+			'Também gosto de aprender continuamente. Sempre que encontro uma tecnologia, ferramenta ou conceito novo que possa melhorar a qualidade do meu trabalho, procuro estudar, testar e entender como tudo funciona. Essa curiosidade faz parte da forma como trabalho.',
+			'Tenho algumas referências que me inspiram desde que comecei a me interessar por tecnologia, como <strong>Mayk Brito, André Rafael, Zeno Rocha e Fábio Akita</strong>. O conteúdo dessas pessoas contribuiu muito para a minha formação e continua me ajudando a evoluir como desenvolvedor.',
+		],
 	},
 };
 
@@ -54,25 +62,16 @@ const t = { ...shared[locale], ...copy[locale] };
 			</h1>
 			<span class="h-px flex-1 bg-line max-[560px]:order-3 max-[560px]:basis-full" aria-hidden="true"
 			></span>
-			<span
-				class="m-0 font-mono text-mono font-normal tracking-mono whitespace-nowrap text-muted uppercase"
-			>
-				{t.where} — {location.label}
-			</span>
 		</header>
 
-		<p
-			class="mt-flow-md max-w-[22ch] text-about-lead leading-[1.1] font-semibold tracking-[-0.03em] text-balance"
-		>
-			{t.aboutBody}
-		</p>
-		<p class="mt-flow-sm max-w-[54ch] text-prose leading-[1.65] text-muted text-pretty">
-			{t.intro}
-		</p>
+		<div class="mx-auto mt-flow-md max-w-4xl text-left">
+			<div class="space-y-4 text-prose leading-[1.65] text-muted text-pretty">
+				{t.intro.map((paragraph) => <p set:html={paragraph} />)}
+			</div>
+		</div>
 	</section>
 
 	<Skills locale={locale} />
-	<Contact locale={locale} />
 	<Footer locale={locale} />
 </BaseLayout>
 
