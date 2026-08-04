@@ -1,43 +1,53 @@
-# Astro Starter Kit: Minimal
+# Felipe Manchester — Portfolio
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Personal portfolio and blog. Recruiter-facing, skills-first, bilingual (PT/EN).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Stack
 
-## 🚀 Project Structure
+- [Astro](https://astro.build) (static output)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [Storyblok](https://www.storyblok.com) — CMS for blog posts and project entries
+- Astro's built-in i18n routing — Portuguese at `/`, English under `/en`
+- Hosted on [Vercel](https://vercel.com)
 
-Inside of your Astro project, you'll see the following folders and files:
+## Project structure
 
 ```text
 /
-├── public/
+├── public/                favicon, static assets
+├── scripts/                storyblok-schema.mjs, storyblok-seed.mjs
 ├── src/
-│   └── pages/
-│       └── index.astro
+│   ├── components/         page sections, one file per concern
+│   ├── content/             shared.ts — strings/data used by 2+ components
+│   ├── layouts/             BaseLayout.astro
+│   ├── lib/                  storyblok.ts, i18n.ts
+│   ├── pages/                 file-based routes (pt at root, en under /en)
+│   ├── scripts/                client-side behavior (nav, theme, animations)
+│   └── styles/                 global.css, Tailwind tokens
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Routes stay in Portuguese under both locales (`/trabalhos`, `/en/trabalhos`) — the URL segment is not translated, only the page content.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Commands
 
-Any static assets, like images, can be placed in the `public/` directory.
+| Command                         | Action                                                  |
+| :------------------------------- | :------------------------------------------------------- |
+| `npm run dev`                    | Start the dev server at `localhost:4321`                 |
+| `npm run build`                  | Build to `./dist/` (runs a type check first)              |
+| `npm run preview`                 | Serve the production build locally                        |
+| `npm run astro -- check`          | Standalone type checking                                   |
+| `npm run astro -- add <name>`     | Add an Astro integration                                    |
 
-## 🧞 Commands
+## Environment
 
-All commands are run from the root of the project, from a terminal:
+Copy `.env.example` to `.env` and fill in:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- `STORYBLOK_TOKEN` — Preview token from the Storyblok space (Settings > Access Tokens), reads drafts locally
+- `STORYBLOK_SPACE_ID` — only needed for the Management API and visual editor
 
-## 👀 Want to learn more?
+In production the build reads published content only.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Content model
+
+Two Storyblok content types: `post` (blog) and `project` (work). Schema and multi-select field options live in `scripts/storyblok-schema.mjs`; `scripts/storyblok-seed.mjs` seeds initial entries.
