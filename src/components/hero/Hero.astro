@@ -43,7 +43,7 @@ const lines = nameLines.map((line, index) => {
 
 <section class="hero" id="main">
 	<div class="hero__block">
-		<h1 class="name" aria-label={nameAccessible}>
+		<h1 class="name" aria-label={nameAccessible} data-tilt>
 			{
 				lines.map(({ chars, stop, delay, total }) => (
 					<span class="name__line" style={`--delay:${delay}ms; --n:${total}`}>

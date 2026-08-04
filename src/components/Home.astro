@@ -46,6 +46,7 @@ const t = copy[locale];
 	import { initTheme } from '../scripts/theme';
 	import { initTagline } from '../scripts/tagline';
 	import { initMagnetic } from '../scripts/magnetic';
+	import { initTilt } from '../scripts/tilt';
 	import { initMotion } from '../scripts/motion';
 
 	// Interaction that must be ready the moment the visitor acts.
@@ -53,6 +54,7 @@ const t = copy[locale];
 	initNav();
 	initTagline();
 	initMagnetic();
+	initTilt();
 
 	// Scroll machinery is deferred and self-gating; see motion.ts.
 	initMotion();
