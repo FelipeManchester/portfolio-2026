@@ -20,6 +20,9 @@ interface Props {
 const nameLines = ['Felipe', 'Manchester'];
 const nameAccessible = 'Felipe Manchester';
 
+/** The accent stop doubles as a click trigger — an easter egg, not a control. */
+const confettiLabel: Record<Locale, string> = { en: 'Celebrate', pt: 'Comemorar' };
+
 const { locale = 'pt' } = Astro.props;
 
 // Split on the server: the browser receives finished markup, so the <h1> is
@@ -42,6 +45,8 @@ const lines = nameLines.map((line, index) => {
 ---
 
 <section class="hero" id="main">
+	<canvas class="confetti" data-confetti-canvas aria-hidden="true"></canvas>
+
 	<div class="hero__block">
 		<h1 class="name" aria-label={nameAccessible} data-tilt>
 			{
@@ -54,9 +59,15 @@ const lines = nameLines.map((line, index) => {
 								</span>
 							))}
 							{stop && (
-								<span class="name__stop" style={`--i:${chars.length}`}>
+								<button
+									type="button"
+									class="name__stop"
+									style={`--i:${chars.length}`}
+									data-confetti-trigger
+									aria-label={confettiLabel[locale]}
+								>
 									.
-								</span>
+								</button>
 							)}
 						</span>
 					</span>
@@ -155,6 +166,7 @@ const lines = nameLines.map((line, index) => {
 		line-height: 0.82;
 		letter-spacing: -0.045em;
 		text-transform: uppercase;
+		cursor: crosshair;
 	}
 
 	/* Shrink-wrapped to the word, not the container: the hairline then spans
@@ -202,9 +214,34 @@ const lines = nameLines.map((line, index) => {
 	}
 
 	/* The one piece of colour in the composition. It lands last, as the rule
-	   reaches the end of the final line. */
+	   reaches the end of the final line. A <button> rather than a <span> — it
+	   is also the confetti trigger — reset back to plain inline text so it
+	   never reads as a UI control until the cursor lands on it. */
 	.name__stop {
+		border: 0;
+		margin: 0;
+		padding: 0;
+		background: none;
 		color: var(--accent);
+		font: inherit;
+		font-weight: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+		cursor: pointer;
+	}
+
+	/* Sits over the whole hero rather than just the name, so a burst has room
+	   to fall before hitting the fold. Never intercepts a click itself.
+	   Explicit width/height rather than relying on inset alone — canvas is a
+	   replaced element, and inset:0 does not stretch those the way it does a
+	   plain div; left at defaults it sizes itself to the intrinsic 300x150. */
+	.confetti {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+		pointer-events: none;
 	}
 
 	/* Per-segment easing: quart-out on the way out, linear through the hold,
