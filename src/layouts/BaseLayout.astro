@@ -93,6 +93,23 @@ const ogLocale: Record<Locale, string> = { en: 'en_US', pt: 'pt_BR' };
 		{/* Display face is the LCP element, so it preloads. The mono face is not. */}
 		<Font cssVariable="--font-general-sans" preload />
 		<Font cssVariable="--font-geist-mono" />
+
+		{/* Skipped outside production so local/dev traffic never lands in the GA property. */}
+		{
+			import.meta.env.PROD && (
+				<Fragment>
+					<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-6MSXSSPYVD" />
+					<script is:inline>
+						window.dataLayer = window.dataLayer || [];
+						function gtag() {
+							dataLayer.push(arguments);
+						}
+						gtag('js', new Date());
+						gtag('config', 'G-6MSXSSPYVD');
+					</script>
+				</Fragment>
+			)
+		}
 	</head>
 
 	<body>
