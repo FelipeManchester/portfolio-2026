@@ -9,6 +9,9 @@ export default defineConfig({
 	// this one value — hreflang tags, the sitemap, and social preview images
 	// later — so pointing the site at a custom domain is a one-line change here.
 	site: 'https://portfolio-2026-one-murex.vercel.app',
+	image: {
+		domains: ['a.storyblok.com'],
+	},
 	vite: {
 		plugins: [tailwindcss()],
 	},
