@@ -8,7 +8,7 @@ export default defineConfig({
 	// The deployed origin. Everything that needs an absolute URL derives from
 	// this one value — hreflang tags, the sitemap, and social preview images
 	// later — so pointing the site at a custom domain is a one-line change here.
-	site: 'https://felipemanchester.vercel.app',
+	site: 'https://felipemanchester.dev',
 	image: {
 		domains: ['a.storyblok.com'],
 	},
