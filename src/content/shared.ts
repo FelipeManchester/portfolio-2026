@@ -23,6 +23,20 @@ export const socials = [
   { label: 'GitHub', url: 'https://github.com/felipemanchester' },
 ];
 
+/** Written out in full on /contato. Digits-only version feeds the wa.me link. */
+export const whatsappNumber = '+55 22 99726-4111';
+const WHATSAPP_DIGITS = '5522997264111';
+
+const whatsappMessage: Record<Locale, string> = {
+  en: "Hi Felipe! I found your portfolio and I'd like to talk about a project.",
+  pt: 'Olá, Felipe! Vi seu portfólio e gostaria de conversar sobre um projeto.',
+};
+
+/** Nav.astro (icon link) and ContactPage.astro (number written out) — both open the same pre-filled chat. */
+export function whatsappUrl(locale: Locale): string {
+  return `https://wa.me/${WHATSAPP_DIGITS}?text=${encodeURIComponent(whatsappMessage[locale])}`;
+}
+
 type Shared = {
   /** Work.astro (home teaser) and TrabalhosList.astro (the full register). */
   workLabel: string;
@@ -58,7 +72,7 @@ export const shared: Record<Locale, Shared> = {
     contactLabel: 'Contact',
     contactHeadline: 'Your next project starts here.',
     contactBody:
-      "If you need a website, want to get a project off the ground, or you're looking for a developer for your team, get in touch. Email is the fastest way to reach me, and I answer every message.",
+      "If you need a website, want to get a project off the ground, or you're looking for a developer for your team, get in touch. WhatsApp is the fastest way to reach me, and I answer every message.",
     blogTitle: 'Blog | Felipe Manchester',
     journalLabel: 'Journal',
     journalAll: 'All posts',
@@ -74,7 +88,7 @@ export const shared: Record<Locale, Shared> = {
     contactLabel: 'Contato',
     contactHeadline: 'Seu próximo projeto começa aqui.',
     contactBody:
-      'Se você precisa de um site, quer tirar um projeto do papel ou está procurando um desenvolvedor para a sua equipe, entre em contato. O e-mail é a forma mais rápida de falar comigo, e respondo todas as mensagens.',
+      'Se você precisa de um site, quer tirar um projeto do papel ou está procurando um desenvolvedor para a sua equipe, entre em contato. O WhatsApp é a forma mais rápida de falar comigo, e respondo todas as mensagens.',
     blogTitle: 'Blog | Felipe Manchester',
     journalLabel: 'Blog',
     journalAll: 'Todos os posts',

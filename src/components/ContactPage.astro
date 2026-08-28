@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from './nav/Nav.astro';
 import BlueprintFrame from './frame/BlueprintFrame.astro';
 import Footer from './Footer.astro';
-import { email, shared, socials } from '../content/shared';
+import { email, shared, socials, whatsappNumber, whatsappUrl } from '../content/shared';
 import type { Locale } from '../lib/i18n';
 
 interface Props {
@@ -55,12 +55,24 @@ const t = { ...shared[locale], ...copy[locale] };
 		<p class="mt-flow-sm max-w-[44ch] leading-[1.65] text-muted text-pretty text-xl">{t.contactBody}</p>
 
 		{/*
-		  The address is set larger than the section body and written out in full:
-		  a recruiter who wants to paste it into their own client should not have
-		  to hunt for it.
+		  Both written out in full, WhatsApp first since it's the faster channel:
+		  a recruiter who wants to paste either into their own client should not
+		  have to hunt for it.
 		*/}
 		<a
-			class="group/mail mt-flow-lg inline-flex flex-col gap-2 font-mono text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] tracking-[-0.006em] text-fg no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
+			class="group/mail mt-flow-lg flex w-fit flex-col gap-2 font-mono text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] tracking-[-0.006em] text-fg no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
+			href={whatsappUrl(locale)}
+			target="_blank"
+			rel="noopener"
+		>
+			{whatsappNumber}
+			<span
+				class="h-px origin-left bg-line transition-[transform,background-color] duration-400 ease-expo group-hover/mail:scale-x-105 group-hover/mail:bg-accent group-focus-visible/mail:scale-x-105 group-focus-visible/mail:bg-accent"
+				aria-hidden="true"></span>
+		</a>
+
+		<a
+			class="group/mail mt-flow-md flex w-fit flex-col gap-2 font-mono text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] tracking-[-0.006em] text-fg no-underline transition-colors duration-220 ease-quart hover:text-accent focus-visible:text-accent"
 			href={`mailto:${email}`}
 		>
 			{email}
