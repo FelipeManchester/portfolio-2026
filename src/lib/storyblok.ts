@@ -78,6 +78,34 @@ interface Story<T> {
  */
 const cache = new Map<string, Promise<unknown>>();
 
+/**
+ * The delivery API allows 6 requests a second per space, and a build can beat
+ * that even with the cache above: Astro bundles this module into more than one
+ * chunk (the prerender pass gets its own copy, so its own empty cache) and
+ * resolves several routes' `getStaticPaths` concurrently. Requests therefore go
+ * out one at a time, and a 429 waits and retries instead of failing the deploy.
+ */
+let queue: Promise<unknown> = Promise.resolve();
+
+function serial<T>(task: () => Promise<T>): Promise<T> {
+	const result = queue.then(task, task);
+	queue = result.catch(() => undefined);
+	return result;
+}
+
+const RETRIES = 5;
+
+async function get(url: URL): Promise<Response> {
+	for (let attempt = 0; ; attempt++) {
+		const response = await fetch(url);
+		if (response.status !== 429 || attempt === RETRIES) return response;
+
+		const after = Number(response.headers.get('retry-after'));
+		const wait = after > 0 ? after * 1000 : 2 ** attempt * 500;
+		await new Promise((resolve) => setTimeout(resolve, wait));
+	}
+}
+
 async function fetchStories<T>(folder: string, locale: Locale): Promise<Story<T>[]> {
 	if (!TOKEN) {
 		throw new Error(
@@ -99,7 +127,7 @@ async function fetchStories<T>(folder: string, locale: Locale): Promise<Story<T>
 	// published a moment ago, not a cached copy from the previous deploy.
 	url.searchParams.set('cv', String(Date.now()));
 
-	const request = fetch(url)
+	const request = serial(() => get(url))
 		.then(async (response) => {
 			if (!response.ok) {
 				throw new Error(
